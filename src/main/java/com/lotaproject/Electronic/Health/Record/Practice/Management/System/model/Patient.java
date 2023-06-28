@@ -24,10 +24,12 @@ public class Patient {
     private String occupation;
     private LocalDate dob;
     private Gender gender;
+    private MedicalHistory medicalHistory;
     private BloodGroup bloodGroup;
     private Genotype genotype;
     private String registeredDate;
     private String modifiedData;
     private String guardian;
+    private String guardianPhoneNumber;
 
 }
