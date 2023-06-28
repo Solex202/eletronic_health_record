@@ -1,4 +1,4 @@
-package com.lotaproject.Electronic.Health.Record.Practice.Management.System.model;
+package com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
