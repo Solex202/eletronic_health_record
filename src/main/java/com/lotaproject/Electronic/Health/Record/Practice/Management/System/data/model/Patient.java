@@ -28,7 +28,7 @@ public class Patient {
     private BloodGroup bloodGroup;
     private Genotype genotype;
     private String registeredDate;
-    private String modifiedData;
+    private String modifiedDate;
     private String guardian;
     private String guardianPhoneNumber;
 
