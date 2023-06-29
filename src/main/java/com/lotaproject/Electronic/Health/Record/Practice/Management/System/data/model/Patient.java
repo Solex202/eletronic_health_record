@@ -5,8 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -24,12 +26,14 @@ public class Patient {
     private String occupation;
     private LocalDate dob;
     private Gender gender;
+    @DBRef
     private MedicalHistory medicalHistory;
     private BloodGroup bloodGroup;
     private Genotype genotype;
-    private String registeredDate;
-    private String modifiedDate;
+    private LocalDateTime registeredDate;
+    private LocalDateTime modifiedDate;
     private String guardian;
     private String guardianPhoneNumber;
+    private String patientId;
 
 }

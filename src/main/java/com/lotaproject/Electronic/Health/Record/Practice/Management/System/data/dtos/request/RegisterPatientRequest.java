@@ -20,7 +20,7 @@ public class RegisterPatientRequest {
     private String occupation;
     private String dob;
     private String gender;
-    private MedicalHistoryDto medicalHistoryDto;
+    private MedicalHistory medicalHistory;
     private String bloodGroup;
     private String genotype;
     private String guardian;
