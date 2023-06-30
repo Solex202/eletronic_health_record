@@ -138,7 +138,6 @@ class PatientServiceImplementationTest {
                 ()->assertEquals(patient.getFirstName(), "lota")
         );
     }
-
     @Test
     void testThatCannotFindUserById_if_id_doesnot_exist_in_database(){
 
