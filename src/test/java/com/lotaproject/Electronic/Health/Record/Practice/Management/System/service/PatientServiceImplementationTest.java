@@ -138,6 +138,12 @@ class PatientServiceImplementationTest {
                 ()->assertEquals(patient.getFirstName(), "lota")
         );
     }
+
+    @Test
+    void testThatCannotFindUserById_if_id_doesnot_exist_in_database(){
+
+        assertThrows(PatientDoesNotexistException.class, ()-> patientService.findById("364723793274883"));
+    }
     @AfterEach
     void tearDown() {
     }
