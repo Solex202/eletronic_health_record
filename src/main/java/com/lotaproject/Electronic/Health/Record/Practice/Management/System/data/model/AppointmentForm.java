@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Data
 @AllArgsConstructor
@@ -15,9 +16,10 @@ import java.time.LocalDateTime;
 public class AppointmentForm {
 
    private LocalDate appointmentDate;
-    private LocalDateTime timeSlot;
+    private LocalTime timeSlot;
     private String patientID;
     private String patientName;
     private String doctorName;
+    private LocalDateTime bookedTime;
 //    and other relevant details
 }
