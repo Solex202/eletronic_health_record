@@ -122,7 +122,6 @@ class PatientServiceImplementationTest {
                 ()->assertEquals(patient.getFirstName(), "lota")
         );
     }
-
     @Test
     void testThatCannotFindUserByEmail_if_email_doesnot_exist_in_database(){
 

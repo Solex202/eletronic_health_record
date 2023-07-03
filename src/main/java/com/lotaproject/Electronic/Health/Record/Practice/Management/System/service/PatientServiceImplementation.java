@@ -30,12 +30,9 @@ public class PatientServiceImplementation implements PatientService{
 
         String patientIdentity = RandomString.make(7);
 
-    if(patientRepository.existsByEmail(request.getEmail())){
-        throw new CannotRegisterPatientException(EMAIL_ALREADY_EXCEPTION.getMessage());
-    }
-    if(!emailIsValid(request.getEmail())){
-        throw new CannotRegisterPatientException(EMAIL_IS_INVALID.getMessage());
-    }
+        if(!emailIsValid(request.getEmail())) throw new CannotRegisterPatientException(EMAIL_IS_INVALID.getMessage());
+
+        if(patientRepository.existsByEmail(request.getEmail())) throw new CannotRegisterPatientException(EMAIL_ALREADY_EXCEPTION.getMessage());
 
         MedicalHistory medicalHistory = new MedicalHistory();
         medicalHistory.setMedication(request.getMedicalHistory().getMedication());
@@ -73,12 +70,10 @@ public class PatientServiceImplementation implements PatientService{
     public Patient findByEmail(String email) {
         return patientRepository.findByEmail(email).orElseThrow(()-> new PatientDoesNotexistException(String.format(PATIENT_WITH_EMAIL_DOESNOT_EXIST.getMessage(), email)));
     }
-
     @Override
     public Patient findById(String id) {
         return patientRepository.findById(id).orElseThrow(()-> new PatientDoesNotexistException(String.format(PATIENT_WITH_ID_DOESNOT_EXIST.getMessage(), id)));
     }
-
     private boolean emailIsValid(String email) {
 
         String regex = "[a-zA-z][\\w-]{1,20}@\\w{2,20}\\.\\w{2,3}$";
