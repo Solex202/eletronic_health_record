@@ -1,6 +1,7 @@
 package com.lotaproject.Electronic.Health.Record.Practice.Management.System.service;
 
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.RegisterPatientRequest;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.UpdatePatientDetailRequest;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.*;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.PatientRepository;
@@ -74,6 +75,18 @@ public class PatientServiceImplementation implements PatientService{
     public Patient findById(String id) {
         return patientRepository.findById(id).orElseThrow(()-> new PatientDoesNotexistException(String.format(PATIENT_WITH_ID_DOESNOT_EXIST.getMessage(), id)));
     }
+
+    @Override
+    public ApiResponse<?> updatePatientDetails(String id, UpdatePatientDetailRequest request1) {
+        var patient = findById(id);
+
+        if(request1.getEmail() != null) patient.setEmail(request1.getEmail());
+        if(request1.getFirstName() != null) patient.setFirstName(request1.getFirstName());
+
+        var newPatient = patientRepository.save(patient);
+        return ApiResponse.builder().message("Updated Successful").data(newPatient).build();
+    }
+
     private boolean emailIsValid(String email) {
 
         String regex = "[a-zA-z][\\w-]{1,20}@\\w{2,20}\\.\\w{2,3}$";

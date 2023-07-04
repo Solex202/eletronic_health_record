@@ -48,7 +48,7 @@ class PatientServiceImplementationTest {
 
         RegisterPatientRequest request = RegisterPatientRequest.builder()
                 .gender("MALE")
-                .email("amakaewwr@gmail.com")
+                .email("amakaewwryy@gmail.com")
                 .address("9 road")
                 .guardian("mr him")
                 .firstName("lota")
@@ -145,49 +145,51 @@ class PatientServiceImplementationTest {
     @Test
     void testThatCanUpdatePatientDetails(){
 
-        MedicalHistory medicalHistory = new MedicalHistory();
-        List<String> ailments = new ArrayList<>();
-        ailments.add("headaches");
-        ailments.add("sickness");
-
-        List<String> allergy = new ArrayList<>();
-        allergy.add("house dust");
-        allergy.add("insect sting");
-
-        List<String> medication = new ArrayList<>();
-        medication.add("medicine");
-
-        medicalHistory.setAilment(ailments);
-        medicalHistory.setAllergy(allergy);
-        medicalHistory.setMedication(medication);
-
-        RegisterPatientRequest request = RegisterPatientRequest.builder()
-                .gender("MALE")
-                .email("amaka@gmail.com")
-                .address("9 road")
-                .guardian("mr him")
-                .firstName("lota")
-                .lastName("chi")
-                .phoneNumber("080343332")
-                .genotype("AA")
-                .bloodGroup("O_POSITIVE")
-                .occupation("intro tech")
-                .dob(String.valueOf(LocalDate.of(2000,3,22)))
-                .guardianPhoneNumber("0909090")
-                .medicalHistory(medicalHistory)
-                .build();
-
-        ApiResponse<?> response = patientService.registerPatient(request);
-
-        assertAll(
-                ()-> assertNotNull(response),
-                ()-> assertThat(response.getMessage(), is("Registration Successfully"))
-        );
+//        MedicalHistory medicalHistory = new MedicalHistory();
+//        List<String> ailments = new ArrayList<>();
+//        ailments.add("headaches");
+//        ailments.add("sickness");
+//
+//        List<String> allergy = new ArrayList<>();
+//        allergy.add("house dust");
+//        allergy.add("insect sting");
+//
+//        List<String> medication = new ArrayList<>();
+//        medication.add("medicine");
+//
+//        medicalHistory.setAilment(ailments);
+//        medicalHistory.setAllergy(allergy);
+//        medicalHistory.setMedication(medication);
+//
+//        RegisterPatientRequest request = RegisterPatientRequest.builder()
+//                .gender("MALE")
+//                .email("amaka@gmail.com")
+//                .address("9 road")
+//                .guardian("mr him")
+//                .firstName("lota")
+//                .lastName("chi")
+//                .phoneNumber("080343332")
+//                .genotype("AA")
+//                .bloodGroup("O_POSITIVE")
+//                .occupation("intro tech")
+//                .dob(String.valueOf(LocalDate.of(2000,3,22)))
+//                .guardianPhoneNumber("0909090")
+//                .medicalHistory(medicalHistory)
+//                .build();
+//
+//        ApiResponse<?> response = patientService.registerPatient(request);
+//
+//        assertAll(
+//                ()-> assertNotNull(response),
+//                ()-> assertThat(response.getMessage(), is("Registration Successfully"))
+//        );
 
         UpdatePatientDetailRequest request1 = new UpdatePatientDetailRequest();
         request1.setFirstName("him");
 
-//        ApiResponse<?> response1 = patientService.updatePatientDetails(, request1)
+        ApiResponse<?> response1 = patientService.updatePatientDetails("64a332cc0003081a15b23893", request1);
+        assertThat(response1.getMessage(), is("Updated Successful"));
+
 
     }
     @AfterEach
