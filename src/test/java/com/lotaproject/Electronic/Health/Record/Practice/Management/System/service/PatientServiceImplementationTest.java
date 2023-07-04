@@ -146,7 +146,7 @@ class PatientServiceImplementationTest {
     void testThatCanUpdatePatientDetails(){
 
         UpdatePatientDetailRequest request1 = new UpdatePatientDetailRequest();
-        request1.setEmail("amakaewwr@gmail.com");
+        request1.setEmail("amaka@gmail.com");
 
         ApiResponse<?> response1 = patientService.updatePatientDetails("64a332cc0003081a15b23893", request1);
         assertThat(response1.getMessage(), is("Updated Successful"));

@@ -86,12 +86,15 @@ public class PatientServiceImplementation implements PatientService{
     public ApiResponse<?> updatePatientDetails(String id, UpdatePatientDetailRequest request1) {
         var patient = findById(id);
 
-//        emailValidation(request1.getEmail());
         if(!emailIsValid(request1.getEmail())) throw new CannotRegisterPatientException(EMAIL_IS_INVALID.getMessage());
 
-        if(Objects.equals(request1.getEmail(), patient.getEmail())) patient.setEmail(request1.getEmail());
+        if(patientRepository.existsByEmail(request1.getEmail())){
 
-        if(patientRepository.existsByEmail(request1.getEmail())) throw new CannotRegisterPatientException(EMAIL_ALREADY_EXCEPTION.getMessage());
+            if(Objects.equals(request1.getEmail(), patient.getEmail())){
+
+                patient.setEmail(request1.getEmail());
+            }else throw new CannotRegisterPatientException(EMAIL_ALREADY_EXCEPTION.getMessage());
+        }
 
         if(request1.getEmail() != null) patient.setEmail(request1.getEmail());
         if(request1.getFirstName() != null) patient.setFirstName(request1.getFirstName());
