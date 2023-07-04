@@ -32,7 +32,7 @@ public class PatientServiceImplementation implements PatientService{
 
         String patientIdentity = RandomString.make(7);
 
-        emailValidation(request.getEmail());
+        RegisterEmailValidation(request.getEmail());
 
         MedicalHistory medicalHistory = new MedicalHistory();
         medicalHistory.setMedication(request.getMedicalHistory().getMedication());
@@ -67,7 +67,7 @@ public class PatientServiceImplementation implements PatientService{
 
     }
 
-    private void emailValidation(String email) {
+    private void RegisterEmailValidation(String email) {
         if(!emailIsValid(email)) throw new CannotRegisterPatientException(EMAIL_IS_INVALID.getMessage());
 
         if(patientRepository.existsByEmail(email)) throw new CannotRegisterPatientException(EMAIL_ALREADY_EXCEPTION.getMessage());
@@ -81,26 +81,29 @@ public class PatientServiceImplementation implements PatientService{
     public Patient findById(String id) {
         return patientRepository.findById(id).orElseThrow(()-> new PatientDoesNotexistException(String.format(PATIENT_WITH_ID_DOESNOT_EXIST.getMessage(), id)));
     }
-
     @Override
     public ApiResponse<?> updatePatientDetails(String id, UpdatePatientDetailRequest request1) {
         var patient = findById(id);
 
-        if(!emailIsValid(request1.getEmail())) throw new CannotRegisterPatientException(EMAIL_IS_INVALID.getMessage());
-
-        if(patientRepository.existsByEmail(request1.getEmail())){
-
-            if(Objects.equals(request1.getEmail(), patient.getEmail())){
-
-                patient.setEmail(request1.getEmail());
-            }else throw new CannotRegisterPatientException(EMAIL_ALREADY_EXCEPTION.getMessage());
-        }
+        updateEmailValidation(request1.getEmail(), patient);
 
         if(request1.getEmail() != null) patient.setEmail(request1.getEmail());
         if(request1.getFirstName() != null) patient.setFirstName(request1.getFirstName());
 
         var newPatient = patientRepository.save(patient);
         return ApiResponse.builder().message("Updated Successful").data(newPatient).build();
+    }
+
+    private void updateEmailValidation(String email, Patient patient) {
+        if(!emailIsValid(email)) throw new CannotRegisterPatientException(EMAIL_IS_INVALID.getMessage());
+
+        if(patientRepository.existsByEmail(email)){
+
+            if(Objects.equals(email, patient.getEmail())){
+
+                patient.setEmail(email);
+            }else throw new CannotRegisterPatientException(EMAIL_ALREADY_EXCEPTION.getMessage());
+        }
     }
 
     private boolean emailIsValid(String email) {
