@@ -31,9 +31,7 @@ public class PatientServiceImplementation implements PatientService{
 
         String patientIdentity = RandomString.make(7);
 
-        if(!emailIsValid(request.getEmail())) throw new CannotRegisterPatientException(EMAIL_IS_INVALID.getMessage());
-
-        if(patientRepository.existsByEmail(request.getEmail())) throw new CannotRegisterPatientException(EMAIL_ALREADY_EXCEPTION.getMessage());
+        emailValidation(request.getEmail());
 
         MedicalHistory medicalHistory = new MedicalHistory();
         medicalHistory.setMedication(request.getMedicalHistory().getMedication());
@@ -67,6 +65,13 @@ public class PatientServiceImplementation implements PatientService{
         return ApiResponse.builder().message("Registration Successfully").data(savedPatient).build();
 
     }
+
+    private void emailValidation(String email) {
+        if(!emailIsValid(email)) throw new CannotRegisterPatientException(EMAIL_IS_INVALID.getMessage());
+
+        if(patientRepository.existsByEmail(email)) throw new CannotRegisterPatientException(EMAIL_ALREADY_EXCEPTION.getMessage());
+    }
+
     @Override
     public Patient findByEmail(String email) {
         return patientRepository.findByEmail(email).orElseThrow(()-> new PatientDoesNotexistException(String.format(PATIENT_WITH_EMAIL_DOESNOT_EXIST.getMessage(), email)));
@@ -79,6 +84,8 @@ public class PatientServiceImplementation implements PatientService{
     @Override
     public ApiResponse<?> updatePatientDetails(String id, UpdatePatientDetailRequest request1) {
         var patient = findById(id);
+
+        emailValidation(request1.getEmail());
 
         if(request1.getEmail() != null) patient.setEmail(request1.getEmail());
         if(request1.getFirstName() != null) patient.setFirstName(request1.getFirstName());
