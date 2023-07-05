@@ -3,6 +3,7 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.serv
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.RegisterPatientRequest;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.UpdatePatientDetailRequest;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.PaginatedPatientResponse;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Patient;
 
 public interface PatientService {
@@ -13,4 +14,6 @@ public interface PatientService {
     Patient findById(String id);
 
     ApiResponse<?> updatePatientDetails(String id, UpdatePatientDetailRequest request1);
+
+    PaginatedPatientResponse findByName(String him);
 }

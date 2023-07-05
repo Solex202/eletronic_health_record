@@ -3,6 +3,7 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.serv
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.RegisterPatientRequest;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.UpdatePatientDetailRequest;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.PaginatedPatientResponse;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.MedicalHistory;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Patient;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.CannotRegisterPatientException;
@@ -152,15 +153,28 @@ class PatientServiceImplementationTest {
         assertThat(response1.getMessage(), is("Updated Successful"));
 
     }
-
     @Test
     @DisplayName("throw exception if email is not valid")
-    void testThatCannotUpdatePatientDetails(){
+    void testThatCannotUpdatePatientDetails1(){
 
         UpdatePatientDetailRequest request1 = new UpdatePatientDetailRequest();
         request1.setEmail("*amaka@gmail.com");
 
         assertThrows(CannotRegisterPatientException.class, ()-> patientService.updatePatientDetails("64a332cc0003081a15b23893", request1));
+    }
+    @Test
+    @DisplayName("throw exception if email is already exists")
+    void testThatCannotUpdatePatientDetails2(){
+
+        UpdatePatientDetailRequest request1 = new UpdatePatientDetailRequest();
+        request1.setEmail("lotas@gmail.com");
+
+        assertThrows(CannotRegisterPatientException.class, ()-> patientService.updatePatientDetails("64a332cc0003081a15b23893", request1));
+    }
+
+    @Test
+    void testThatCanFindPatientByName(){
+        PaginatedPatientResponse response = patientService.findByName("him");
     }
     @AfterEach
     void tearDown() {
