@@ -152,6 +152,16 @@ class PatientServiceImplementationTest {
         assertThat(response1.getMessage(), is("Updated Successful"));
 
     }
+
+    @Test
+    @DisplayName("throw exception if email is not valid")
+    void testThatCannotUpdatePatientDetails(){
+
+        UpdatePatientDetailRequest request1 = new UpdatePatientDetailRequest();
+        request1.setEmail("*amaka@gmail.com");
+
+        assertThrows(CannotRegisterPatientException.class, ()-> patientService.updatePatientDetails("64a332cc0003081a15b23893", request1));
+    }
     @AfterEach
     void tearDown() {
     }
