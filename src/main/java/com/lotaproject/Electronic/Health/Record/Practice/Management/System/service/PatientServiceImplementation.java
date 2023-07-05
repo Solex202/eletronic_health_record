@@ -3,13 +3,19 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.serv
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.RegisterPatientRequest;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.UpdatePatientDetailRequest;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.PaginatedPatientResponse;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.*;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.PatientRepository;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.CannotRegisterPatientException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.PatientDoesNotexistException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.internal.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -22,6 +28,7 @@ import static com.lotaproject.Electronic.Health.Record.Practice.Management.Syste
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class PatientServiceImplementation implements PatientService{
     private final MedicalHistoryService medicalHistoryService;
     @Autowired
@@ -95,6 +102,23 @@ public class PatientServiceImplementation implements PatientService{
 
         var newPatient = patientRepository.save(patient);
         return ApiResponse.builder().message("Updated Successful").data(newPatient).build();
+    }
+
+    @Override
+    public PaginatedPatientResponse findByName(int pageNumber, int pageSize,String name) {
+        Sort.Order order = new Sort.Order(Sort.Direction.DESC, "registeredDate");
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, Sort.by(order));
+
+        Page<Patient> listOfPatient = patientRepository.findByFirstNameContaining(name, pageable);
+
+
+        log.info("list of patients ----> {}", listOfPatient.toList());
+        return PaginatedPatientResponse.builder()
+                .patients(listOfPatient.toList())
+                .noOfPatients(listOfPatient.getContent().size())
+                .currentPage(pageNumber)
+                .pageSize(pageSize)
+                .build();
     }
 
     private void updateEmailValidation(String email, Patient patient) {

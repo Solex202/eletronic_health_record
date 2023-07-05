@@ -15,5 +15,5 @@ public interface PatientService {
 
     ApiResponse<?> updatePatientDetails(String id, UpdatePatientDetailRequest request1);
 
-    PaginatedPatientResponse findByName(String him);
+    PaginatedPatientResponse findByName(int pageNumber, int pageSize,String name);
 }

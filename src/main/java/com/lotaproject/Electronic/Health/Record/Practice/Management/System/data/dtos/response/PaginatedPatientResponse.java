@@ -16,6 +16,6 @@ public class PaginatedPatientResponse {
 
     private int noOfPatients;
 
-    private int noOfTotalPages;
+    private int pageSize;
 
 }
