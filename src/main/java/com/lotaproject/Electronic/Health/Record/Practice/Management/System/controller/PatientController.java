@@ -36,6 +36,14 @@ public class PatientController {
         } catch (PatientDoesNotexistException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
+    }
+    @GetMapping("/find-by-id/{id}")
+    public ResponseEntity<?> findById(@PathVariable String id){
+        try{
+            var patient = patientService.findById(id);
+            return new ResponseEntity<>(patient, HttpStatus.OK);
+        } catch (PatientDoesNotexistException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 }
