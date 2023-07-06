@@ -174,7 +174,7 @@ class PatientServiceImplementationTest {
 
     @Test
     void testThatCanFindPatientByName(){
-        PaginatedPatientResponse response = patientService.findByName(1,10,"hi");
+        PaginatedPatientResponse response = patientService.findByName(1,10,"ify");
 
         assertAll(
                 ()-> assertThat(response.getNoOfPatients(), is(1))

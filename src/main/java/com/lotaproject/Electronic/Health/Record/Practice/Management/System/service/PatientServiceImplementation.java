@@ -109,7 +109,7 @@ public class PatientServiceImplementation implements PatientService{
         Sort.Order order = new Sort.Order(Sort.Direction.DESC, "registeredDate");
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, Sort.by(order));
 
-        Page<Patient> listOfPatient = patientRepository.findByFirstNameContaining(name, pageable);
+        Page<Patient> listOfPatient = patientRepository.findByFirstNameContainingOrLastNameContaining(name, name,pageable);
 
 
         log.info("list of patients ----> {}", listOfPatient.toList());

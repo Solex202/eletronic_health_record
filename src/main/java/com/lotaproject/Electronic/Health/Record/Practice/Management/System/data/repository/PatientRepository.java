@@ -16,4 +16,10 @@ public interface PatientRepository extends MongoRepository<Patient, String> {
     Page<Patient> findByFirstNameContaining(String name, Pageable pageable);
 
     Page<Patient> findByFirstName(String name, Pageable pageable);
+
+    Page<Patient> findByFirstNameAndLastNameContaining(String name, Pageable pageable);
+
+    Page<Patient> findByFirstNameOrLastNameContaining(String name, Pageable pageable);
+
+    Page<Patient> findByFirstNameContainingOrLastNameContaining(String name,String n, Pageable pageable);
 }
