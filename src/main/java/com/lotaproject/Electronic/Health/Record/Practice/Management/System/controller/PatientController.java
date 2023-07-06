@@ -3,6 +3,7 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.cont
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.RegisterPatientRequest;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.UpdatePatientDetailRequest;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.PaginatedPatientResponse;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Patient;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.CannotRegisterPatientException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.PatientDoesNotexistException;
@@ -54,6 +55,15 @@ public class PatientController {
             ApiResponse<?> updateResponse = patientService.updatePatientDetails(id, request);
             return new ResponseEntity<>(updateResponse, HttpStatus.OK);
         } catch (CannotRegisterPatientException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+    @GetMapping("find-by-name/{pageNumber}/{pageSize}/{name}")
+    public ResponseEntity<?> findByName(@PathVariable int pageNumber, @PathVariable int pageSize, @PathVariable String name){
+        try {
+            PaginatedPatientResponse response = patientService.findByName(pageNumber, pageSize, name);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
