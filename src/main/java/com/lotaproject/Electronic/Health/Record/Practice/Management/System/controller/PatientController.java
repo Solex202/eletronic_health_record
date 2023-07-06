@@ -1,6 +1,7 @@
 package com.lotaproject.Electronic.Health.Record.Practice.Management.System.controller;
 
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.RegisterPatientRequest;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.UpdatePatientDetailRequest;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Patient;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.CannotRegisterPatientException;
@@ -43,6 +44,16 @@ public class PatientController {
             var patient = patientService.findById(id);
             return new ResponseEntity<>(patient, HttpStatus.OK);
         } catch (PatientDoesNotexistException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PatchMapping("update/{id}")
+    public ResponseEntity<?> update(@PathVariable String id, @RequestBody UpdatePatientDetailRequest request){
+        try{
+            ApiResponse<?> updateResponse = patientService.updatePatientDetails(id, request);
+            return new ResponseEntity<>(updateResponse, HttpStatus.OK);
+        } catch (CannotRegisterPatientException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

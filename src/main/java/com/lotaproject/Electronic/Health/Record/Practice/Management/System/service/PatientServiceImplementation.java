@@ -73,13 +73,10 @@ public class PatientServiceImplementation implements PatientService{
         return ApiResponse.builder().message("Registration Successfully").data(savedPatient).build();
 
     }
-
     private void registerEmailValidation(String email) {
         if(!emailIsValid(email)) throw new CannotRegisterPatientException(EMAIL_IS_INVALID.getMessage());
-
         if(patientRepository.existsByEmail(email)) throw new CannotRegisterPatientException(EMAIL_ALREADY_EXCEPTION.getMessage());
     }
-
     @Override
     public Patient findByEmail(String email) {
         return patientRepository.findByEmail(email).orElseThrow(()-> new PatientDoesNotexistException(String.format(PATIENT_WITH_EMAIL_DOESNOT_EXIST.getMessage(), email)));
@@ -103,15 +100,12 @@ public class PatientServiceImplementation implements PatientService{
         var newPatient = patientRepository.save(patient);
         return ApiResponse.builder().message("Updated Successful").data(newPatient).build();
     }
-
     @Override
     public PaginatedPatientResponse findByName(int pageNumber, int pageSize,String name) {
         Sort.Order order = new Sort.Order(Sort.Direction.DESC, "registeredDate");
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, Sort.by(order));
 
         Page<Patient> listOfPatient = patientRepository.findByFirstNameContainingOrLastNameContaining(name, name,pageable);
-
-
         log.info("list of patients ----> {}", listOfPatient.toList());
         return PaginatedPatientResponse.builder()
                 .patients(listOfPatient.toList())
