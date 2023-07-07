@@ -24,6 +24,7 @@ public class AppointmentForm {
     private String patientName;
     private String doctorName;
     private LocalDateTime bookedTime;
+    private LocalDateTime modifiedDate;
     private AppointmentStatus appointmentStatus;
     private String duration;
 //    and other relevant details
