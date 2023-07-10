@@ -21,5 +21,5 @@ public class Doctor {
     private String name;
     private String email;
     private String password;
-    private List<String> appointments;
+//    private List<AppointmentForm> appointments;
 }

@@ -14,7 +14,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 @SpringBootTest
 class DoctorServiceImplementationTest {
-
     @Autowired
     private DoctorService doctorService;
 
@@ -30,8 +29,6 @@ class DoctorServiceImplementationTest {
         assertAll(
                 ()-> assertThat(response.getMessage(), is("Successful"))
         );
-
-
     }
 
     @AfterEach

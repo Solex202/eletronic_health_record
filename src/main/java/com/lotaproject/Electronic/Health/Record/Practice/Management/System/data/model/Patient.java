@@ -36,5 +36,6 @@ public class Patient {
     private String guardian;
     private String guardianPhoneNumber;
     private String patientId;
+    private  boolean loginStatus;
 
 }

@@ -13,10 +13,8 @@ public class DoctorServiceImplementation implements DoctorService{
 
     @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     private DoctorRepository doctorRepository;
-
     @Override
     public ApiResponse<?> saveDoctor(Doctor doctor) {
 
