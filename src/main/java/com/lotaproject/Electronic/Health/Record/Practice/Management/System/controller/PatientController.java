@@ -23,6 +23,7 @@ public class PatientController {
     public ResponseEntity<?> register(@RequestBody RegisterPatientRequest registerPatientRequest){
         try {
             ApiResponse<?> response = patientService.registerPatient(registerPatientRequest);
+            response.setStatusCode(201);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (CannotRegisterPatientException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

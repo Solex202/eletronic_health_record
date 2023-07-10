@@ -7,6 +7,7 @@ import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.*;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.PatientRepository;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.CannotRegisterPatientException;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ElectronicHealthException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.PatientDoesNotexistException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +40,7 @@ public class PatientServiceImplementation implements PatientService{
 
         String patientIdentity = RandomString.make(7);
 
-        registerEmailValidation(request.getEmail());
+        registerPatientValidation(request);
 
         MedicalHistory medicalHistory = new MedicalHistory();
         medicalHistory.setMedication(request.getMedicalHistory().getMedication());
@@ -55,6 +56,7 @@ public class PatientServiceImplementation implements PatientService{
         patient.setPatientId(patientIdentity);
         patient.setAddress(request.getAddress());
         patient.setEmail(request.getEmail());
+        patient.setPassword(request.getPassword());
         patient.setFirstName(request.getFirstName());
         patient.setLastName(request.getLastName());
         patient.setPhoneNumber(request.getPhoneNumber());
@@ -73,9 +75,14 @@ public class PatientServiceImplementation implements PatientService{
         return ApiResponse.builder().message("Registration Successfully").data(savedPatient).build();
 
     }
-    private void registerEmailValidation(String email) {
-        if(!emailIsValid(email)) throw new CannotRegisterPatientException(EMAIL_IS_INVALID.getMessage());
-        if(patientRepository.existsByEmail(email)) throw new CannotRegisterPatientException(EMAIL_ALREADY_EXCEPTION.getMessage());
+    private void registerPatientValidation(RegisterPatientRequest request) {
+        StringBuilder builder = new StringBuilder();
+        if(!emailIsValid(request.getEmail())) builder.append(EMAIL_IS_INVALID.getMessage()).append("\n");
+
+        if(patientRepository.existsByEmail(request.getEmail())) builder.append(EMAIL_ALREADY_EXCEPTION.getMessage()).append("\n");
+        if(!passwordIsValid(request.getPassword())) builder.append(INVALID_PASSWORD.getMessage());
+
+        if(!builder.isEmpty()) throw new ElectronicHealthException(builder.toString());
     }
     @Override
     public Patient findByEmail(String email) {
@@ -130,6 +137,14 @@ public class PatientServiceImplementation implements PatientService{
         String regex = "[a-zA-z][\\w-]{1,20}@\\w{2,20}\\.\\w{2,3}$";
         Pattern pattern  = Pattern.compile(regex);
         Matcher matcher =  pattern.matcher(email);
+
+        return matcher.matches();
+    }
+
+    private boolean passwordIsValid(String password) {
+        String regex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20}$";
+        Pattern pattern  = Pattern.compile(regex);
+        Matcher matcher =  pattern.matcher(password);
 
         return matcher.matches();
     }

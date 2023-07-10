@@ -24,7 +24,7 @@ public class SecurityConfiguration {
         .csrf()
         .disable()
         .authorizeHttpRequests()
-        .requestMatchers("/api/v1/auth/**")
+        .requestMatchers("/health-record/registration")
         .permitAll()
         .anyRequest()
         .authenticated()

@@ -49,7 +49,8 @@ class PatientServiceImplementationTest {
 
         RegisterPatientRequest request = RegisterPatientRequest.builder()
                 .gender("MALE")
-                .email("amakaewwryy@gmail.com")
+                .email(".amakaewwryy@gmail.com")
+                .password("ord123")
                 .address("9 road")
                 .guardian("mr him")
                 .firstName("lota")
@@ -62,7 +63,6 @@ class PatientServiceImplementationTest {
                 .guardianPhoneNumber("0909090")
                 .medicalHistory(medicalHistory)
                 .build();
-
         ApiResponse<?> response = patientService.registerPatient(request);
 
             assertAll(
