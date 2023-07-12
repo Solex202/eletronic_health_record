@@ -2,8 +2,10 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.serv
 
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.PatientRepository;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.RefreshTokenRepository;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.TokenRefreshException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.security.RefreshToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -11,8 +13,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class RefreshTokenImplentation {
+public class RefreshTokenImplementation {
 
+    @Value("${health.app.jwtRefreshExpirationMs}")
+    private Long refreshTokenDurationMs;
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
 
