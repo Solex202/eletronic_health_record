@@ -23,7 +23,7 @@ public class ApplicationConfig {
 
   @Bean
   public UserDetailsService userDetailsService() {
-    return username -> (UserDetails) repository.findByEmail(username)
+    return email -> (UserDetails) repository.findByEmail(email)
         .orElseThrow(() -> new PatientDoesNotexistException("User not found"));
   }
 
