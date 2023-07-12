@@ -49,8 +49,8 @@ class PatientServiceImplementationTest {
 
         RegisterPatientRequest request = RegisterPatientRequest.builder()
                 .gender("MALE")
-                .email(".amakaewwryy@gmail.com")
-                .password("ord123")
+                .email("ceo@gmail.com")
+                .password("#Passord123")
                 .address("9 road")
                 .guardian("mr him")
                 .firstName("lota")
@@ -171,7 +171,6 @@ class PatientServiceImplementationTest {
 
         assertThrows(CannotRegisterPatientException.class, ()-> patientService.updatePatientDetails("64a332cc0003081a15b23893", request1));
     }
-
     @Test
     void testThatCanFindPatientByName(){
         PaginatedPatientResponse response = patientService.findByName(1,10,"ify");
@@ -179,6 +178,11 @@ class PatientServiceImplementationTest {
         assertAll(
                 ()-> assertThat(response.getNoOfPatients(), is(1))
         );
+    }
+
+    @Test
+    void testThatPatientCanLogin(){
+
     }
     @AfterEach
     void tearDown() {

@@ -1,5 +1,6 @@
 package com.lotaproject.Electronic.Health.Record.Practice.Management.System.controller;
 
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.LoginRequest;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.RegisterPatientRequest;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.UpdatePatientDetailRequest;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
@@ -20,7 +21,7 @@ public class PatientController {
     @Autowired
     private PatientService patientService;
     @PostMapping("/registration")
-    public ResponseEntity<?> register(@RequestBody RegisterPatientRequest registerPatientRequest){
+    public ResponseEntity<?> register(@RequestBody RegisterPatientRequest registerPatientRequest) {
         try {
             ApiResponse<?> response = patientService.registerPatient(registerPatientRequest);
             response.setStatusCode(201);
@@ -29,6 +30,11 @@ public class PatientController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 
         }
+    }
+        @PostMapping("/login")
+        public ResponseEntity<?> login(@RequestBody LoginRequest request){
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
     }
     @GetMapping("/find-by-email/{email}")

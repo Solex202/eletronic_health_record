@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -32,6 +33,8 @@ import static com.lotaproject.Electronic.Health.Record.Practice.Management.Syste
 @Slf4j
 public class PatientServiceImplementation implements PatientService{
     private final MedicalHistoryService medicalHistoryService;
+
+    private final BCryptPasswordEncoder encoder;
     @Autowired
     private  PatientRepository patientRepository;
     @Override
@@ -39,6 +42,8 @@ public class PatientServiceImplementation implements PatientService{
         var patient = new Patient();
 
         String patientIdentity = RandomString.make(7);
+
+        String encodedPassword = encoder.encode(request.getPassword());
 
         registerPatientValidation(request);
 
@@ -56,7 +61,7 @@ public class PatientServiceImplementation implements PatientService{
         patient.setPatientId(patientIdentity);
         patient.setAddress(request.getAddress());
         patient.setEmail(request.getEmail());
-        patient.setPassword(request.getPassword());
+        patient.setPassword(encodedPassword);
         patient.setFirstName(request.getFirstName());
         patient.setLastName(request.getLastName());
         patient.setPhoneNumber(request.getPhoneNumber());
