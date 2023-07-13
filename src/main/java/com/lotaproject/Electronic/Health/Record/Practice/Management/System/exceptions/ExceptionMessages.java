@@ -7,7 +7,11 @@ public enum ExceptionMessages {
 
     PATIENT_WITH_ID_DOESNOT_EXIST("Patient with id %s does not exist"),
 
-    INVALID_PASSWORD("Password is too weak,password must contain at least 1 upper case, 1 special , 1 number and must be minimum of 8 characters")
+    INVALID_PASSWORD("Password is too weak,password must contain at least 1 upper case, 1 special , 1 number and must be minimum of 8 characters"),
+
+    INCORRECT_EMAIL("Email is incorrect"),
+
+    INCORRECT_PASSWORD("Password is incorrect")
 
 
     ;

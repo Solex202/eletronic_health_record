@@ -2,8 +2,12 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.serv
 
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.LoginRequest;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.LoginResponse;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Patient;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.UserDetailsImpl;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.PatientRepository;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.AuthException;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ElectronicHealthException;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.PatientDoesNotexistException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.security.JwtService;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.security.RefreshToken;
 import lombok.extern.slf4j.Slf4j;
@@ -14,11 +18,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ExceptionMessages.*;
 
 @Service
 @Slf4j
@@ -38,31 +43,34 @@ public class AuthServiceImplementation implements AuthService {
     @Autowired
     JwtService jwtService;
 
+    public Patient findByEmail(String email) {
+        return patientRepository.findByEmail(email).orElseThrow(()-> new PatientDoesNotexistException(String.format(PATIENT_WITH_EMAIL_DOESNOT_EXIST.getMessage(), email)));
+    }
+
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
+        Patient patient = findByEmail(loginRequest.getEmail());
+        StringBuilder builder = new StringBuilder();
+        if(!loginRequest.getEmail().matches(patient.getEmail())) builder.append(INCORRECT_EMAIL.getMessage()).append("\n");
+        if(!loginRequest.getPassword().matches(patient.getPassword())) builder.append(INCORRECT_PASSWORD.getMessage());
+
+        if(!builder.isEmpty()){
+            throw new AuthException(builder.toString());
+        }
 
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
-        log.info("AUTHENTICATION ----> {}", authentication);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        log.info("USER DETAILS ----> {}",userDetails);
-
         String jwt = jwtService.generateToken(userDetails);
-
-        log.info("JWT -----> {}", jwt);
-
         List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
-        log.info("ROLE ---> {}", roles);
+        patient.setLoginStatus(true);
+        patientRepository.save(patient);
 
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
-
-        log.info("REFRESH TOKEN ----> {}", refreshToken);
-
         return LoginResponse.builder()
                 .refreshToken(refreshToken.getToken())
                 .roles(roles)
@@ -70,5 +78,14 @@ public class AuthServiceImplementation implements AuthService {
                 .email(userDetails.getUsername())
                 .id(userDetails.getId())
                 .build();
+    }
+
+    @Override
+    public void logout() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            SecurityContextHolder.getContext().setAuthentication(null);
+        }
+
     }
 }

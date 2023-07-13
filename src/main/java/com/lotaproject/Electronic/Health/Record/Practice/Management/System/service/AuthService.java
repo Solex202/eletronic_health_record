@@ -6,4 +6,6 @@ import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.
 public interface AuthService {
 
     LoginResponse login(LoginRequest request);
+
+    void logout();
 }
