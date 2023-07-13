@@ -2,9 +2,11 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.serv
 
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.LoginRequest;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.LoginResponse;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.UserDetailsImpl;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.PatientRepository;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.security.JwtService;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.security.RefreshToken;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class AuthServiceImplementation implements AuthService {
 
     @Autowired
@@ -31,8 +34,7 @@ public class AuthServiceImplementation implements AuthService {
 //    RoleRepository roleRepository;
 
     @Autowired
-    PasswordEncoder encoder;
-
+    private RefreshTokenService refreshTokenService;
     @Autowired
     JwtService jwtService;
 
@@ -42,27 +44,31 @@ public class AuthServiceImplementation implements AuthService {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
+        log.info("AUTHENTICATION ----> {}", authentication);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        log.info("USER DETAILS ----> {}",userDetails);
 
         String jwt = jwtService.generateToken(userDetails);
+
+        log.info("JWT -----> {}", jwt);
 
         List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
-//        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
-//
-//        return LoginResponse.builder()
-//                .refreshToken()
-//                .roles()
-//                .jwt(jwt)
-//                .token()
-//                .email(userDetails.getUsername())
-//                .id(userDetails)
-//                .build();
-//                        jwt, refreshToken.getToken(), userDetails.getId(),
-//                userDetails.getUsername(), userDetails.getEmail(), roles));
-        return null;
+        log.info("ROLE ---> {}", roles);
+
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+
+        log.info("REFRESH TOKEN ----> {}", refreshToken);
+
+        return LoginResponse.builder()
+                .refreshToken(refreshToken.getToken())
+                .roles(roles)
+                .jwt(jwt)
+                .email(userDetails.getUsername())
+                .id(userDetails.getId())
+                .build();
     }
 }

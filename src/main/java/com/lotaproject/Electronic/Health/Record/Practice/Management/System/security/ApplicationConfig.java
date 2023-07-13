@@ -21,16 +21,18 @@ public class ApplicationConfig {
 
   private final PatientRepository repository;
 
-  @Bean
-  public UserDetailsService userDetailsService() {
-    return email -> (UserDetails) repository.findByEmail(email)
-        .orElseThrow(() -> new PatientDoesNotexistException("User not found"));
-  }
+  private final UserDetailsService userDetailsService;
+
+//  @Bean
+//  public UserDetailsService userDetailsService() {
+//    return email -> (UserDetails) repository.findByEmail(email)
+//        .orElseThrow(() -> new PatientDoesNotexistException("User not found"));
+//  }
 
   @Bean
   public AuthenticationProvider authenticationProvider() {
     DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-    authProvider.setUserDetailsService(userDetailsService());
+    authProvider.setUserDetailsService(userDetailsService);
     authProvider.setPasswordEncoder(passwordEncoder());
     return authProvider;
   }

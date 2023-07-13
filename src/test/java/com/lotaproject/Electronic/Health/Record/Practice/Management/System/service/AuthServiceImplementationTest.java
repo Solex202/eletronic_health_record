@@ -18,8 +18,8 @@ class AuthServiceImplementationTest {
     void testThatUserCanLogin(){
 
         LoginRequest request = LoginRequest.builder()
-                .email("ceo@gmail.com")
-                .password("#Passord123")
+                .email("remi@gmail.com")
+                .password("#Rems2222")
                 .build();
 
         LoginResponse response = authService.login(request);

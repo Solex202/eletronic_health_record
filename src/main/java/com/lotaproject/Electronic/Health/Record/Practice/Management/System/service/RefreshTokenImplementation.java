@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class RefreshTokenImplementation {
+public class RefreshTokenImplementation implements RefreshTokenService{
 
     @Value("${health.app.jwtRefreshExpirationMs}")
     private Long refreshTokenDurationMs;
@@ -23,10 +23,12 @@ public class RefreshTokenImplementation {
     @Autowired
     private PatientRepository patientRepository;
 
+    @Override
     public Optional<RefreshToken> findByToken(String token) {
         return refreshTokenRepository.findByToken(token);
     }
 
+    @Override
     public RefreshToken createRefreshToken(String userId) {
         RefreshToken refreshToken = new RefreshToken();
 
@@ -38,6 +40,7 @@ public class RefreshTokenImplementation {
         return refreshToken;
     }
 
+    @Override
     public RefreshToken verifyExpiration(RefreshToken token) {
         if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
             refreshTokenRepository.delete(token);

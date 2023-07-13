@@ -2,13 +2,15 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.secu
 
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Patient;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 
 import java.time.Instant;
 
 @Data
 public class RefreshToken {
 
-    private long id;
+    @Id
+    private String id;
 
     private Patient patient;
 

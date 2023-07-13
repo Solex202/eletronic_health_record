@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -37,5 +38,6 @@ public class Patient {
     private String guardianPhoneNumber;
     private String patientId;
     private  boolean loginStatus;
+    private Set<Role> roles;
 
 }

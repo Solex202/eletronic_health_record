@@ -22,7 +22,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,6 +44,8 @@ public class PatientServiceImplementation implements PatientService{
         var patient = new Patient();
 
         String patientIdentity = RandomString.make(7);
+        Set<Role> role = new HashSet<>();
+        role.add(Role.PATIENT);
 
         String encodedPassword = encoder.encode(request.getPassword());
 
@@ -58,6 +62,7 @@ public class PatientServiceImplementation implements PatientService{
         medicalHistoryService.createMedicalHistory(medicalHistory);
 
         patient.setMedicalHistory(medicalHistory);
+        patient.setRoles(role);
         patient.setPatientId(patientIdentity);
         patient.setAddress(request.getAddress());
         patient.setEmail(request.getEmail());
