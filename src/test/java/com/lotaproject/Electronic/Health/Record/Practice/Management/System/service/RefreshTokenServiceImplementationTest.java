@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class RefreshTokenImplementationTest {
+class RefreshTokenServiceImplementationTest {
 
     @Autowired
     private RefreshTokenService refreshTokenService;

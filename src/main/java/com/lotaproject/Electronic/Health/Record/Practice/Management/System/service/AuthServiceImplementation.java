@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,14 +26,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ExceptionMessages.*;
-
 @Service
 @Slf4j
 public class AuthServiceImplementation implements AuthService {
-
     @Autowired
     AuthenticationManager authenticationManager;
-
     @Autowired
     PatientRepository patientRepository;
 
@@ -46,17 +45,17 @@ public class AuthServiceImplementation implements AuthService {
     public Patient findByEmail(String email) {
         return patientRepository.findByEmail(email).orElseThrow(()-> new PatientDoesNotexistException(String.format(PATIENT_WITH_EMAIL_DOESNOT_EXIST.getMessage(), email)));
     }
-
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
-        Patient patient = findByEmail(loginRequest.getEmail());
-        StringBuilder builder = new StringBuilder();
-        if(!loginRequest.getEmail().matches(patient.getEmail())) builder.append(INCORRECT_EMAIL.getMessage()).append("\n");
-        if(!loginRequest.getPassword().matches(patient.getPassword())) builder.append(INCORRECT_PASSWORD.getMessage());
+//        StringBuilder builder = new StringBuilder();
+//        if(!loginRequest.getEmail().matches()) builder.append(INCORRECT_EMAIL.getMessage()).append("\n");
+//        if(!loginRequest.getPassword().matches(patient.getPassword())) builder.append(INCORRECT_PASSWORD.getMessage());
+//
+//        if(!builder.isEmpty()){
+//            throw new AuthException(builder.toString());
+//        }
 
-        if(!builder.isEmpty()){
-            throw new AuthException(builder.toString());
-        }
+        try{
 
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
@@ -64,9 +63,13 @@ public class AuthServiceImplementation implements AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         String jwt = jwtService.generateToken(userDetails);
-        List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
+        List<String> roles = userDetails
+                .getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
+        Patient patient = findByEmail(loginRequest.getEmail());
         patient.setLoginStatus(true);
         patientRepository.save(patient);
 
@@ -78,6 +81,9 @@ public class AuthServiceImplementation implements AuthService {
                 .email(userDetails.getUsername())
                 .id(userDetails.getId())
                 .build();
+        } catch (AuthenticationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -86,6 +92,5 @@ public class AuthServiceImplementation implements AuthService {
         if (authentication != null) {
             SecurityContextHolder.getContext().setAuthentication(null);
         }
-
     }
 }

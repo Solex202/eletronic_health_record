@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class RefreshTokenImplementation implements RefreshTokenService{
+public class RefreshTokenServiceImplementation implements RefreshTokenService{
 
     @Value("${health.app.jwtRefreshExpirationMs}")
     private Long refreshTokenDurationMs;
