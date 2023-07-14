@@ -51,7 +51,7 @@ class PatientServiceImplementationTest {
 
         RegisterPatientRequest request = RegisterPatientRequest.builder()
                 .gender("MALE")
-                .email("remi@gmail.com")
+                .email("fer@gmail.com")
                 .password("#Rems2222")
                 .address("9 road")
                 .guardian("mr him")

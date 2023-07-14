@@ -7,6 +7,7 @@ import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.PaginatedPatientResponse;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Patient;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.CannotRegisterPatientException;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ElectronicHealthException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.PatientDoesNotexistException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class PatientController {
             ApiResponse<?> response = patientService.registerPatient(registerPatientRequest);
             response.setStatusCode(201);
             return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (CannotRegisterPatientException e) {
+        } catch (ElectronicHealthException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 
         }

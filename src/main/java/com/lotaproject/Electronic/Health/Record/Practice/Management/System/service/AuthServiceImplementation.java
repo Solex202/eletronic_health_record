@@ -45,17 +45,21 @@ public class AuthServiceImplementation implements AuthService {
     public Patient findByEmail(String email) {
         return patientRepository.findByEmail(email).orElseThrow(()-> new PatientDoesNotexistException(String.format(PATIENT_WITH_EMAIL_DOESNOT_EXIST.getMessage(), email)));
     }
+
+    public Patient findByMail(String email){
+        return patientRepository.findByEmail(email).orElseThrow(()-> new PatientDoesNotexistException(INCORRECT_EMAIL.getMessage()));
+    }
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
-//        StringBuilder builder = new StringBuilder();
-//        if(!loginRequest.getEmail().matches()) builder.append(INCORRECT_EMAIL.getMessage()).append("\n");
-//        if(!loginRequest.getPassword().matches(patient.getPassword())) builder.append(INCORRECT_PASSWORD.getMessage());
-//
-//        if(!builder.isEmpty()){
-//            throw new AuthException(builder.toString());
-//        }
-
         try{
+        Patient patient = findByMail(loginRequest.getEmail());
+        StringBuilder builder = new StringBuilder();
+        if(!loginRequest.getEmail().matches(patient.getEmail())) builder.append(INCORRECT_EMAIL.getMessage()).append("\n");
+        if(!loginRequest.getPassword().matches(patient.getPassword())) builder.append(INCORRECT_PASSWORD.getMessage());
+
+        if(!builder.isEmpty()){
+            throw new AuthException(builder.toString());
+        }
 
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
@@ -69,7 +73,6 @@ public class AuthServiceImplementation implements AuthService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        Patient patient = findByEmail(loginRequest.getEmail());
         patient.setLoginStatus(true);
         patientRepository.save(patient);
 
@@ -82,8 +85,10 @@ public class AuthServiceImplementation implements AuthService {
                 .id(userDetails.getId())
                 .build();
         } catch (AuthenticationException e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
+            throw new ElectronicHealthException(e.getMessage());
         }
+//        return null;
     }
 
     @Override
