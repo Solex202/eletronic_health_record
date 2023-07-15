@@ -69,9 +69,6 @@ public class AuthServiceImplementation implements AuthService {
             builder.append(INCORRECT_PASSWORD.getMessage());
             throw new AuthException(builder.toString());
         }
-            System.out.println(encoder.matches(loginRequest.getPassword(), patient.getPassword()));
-            System.out.println(patient);
-
         if(!encoder.matches(loginRequest.getPassword(), patient.getPassword())) builder.append(INCORRECT_PASSWORD.getMessage());
 
         if(!builder.isEmpty()){

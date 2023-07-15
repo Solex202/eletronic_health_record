@@ -1,6 +1,7 @@
 package com.lotaproject.Electronic.Health.Record.Practice.Management.System.controller;
 
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.LoginRequest;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.LoginResponse;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.RegisterPatientRequest;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.UpdatePatientDetailRequest;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
@@ -34,8 +35,13 @@ public class PatientController {
     }
         @PostMapping("/login")
         public ResponseEntity<?> login(@RequestBody LoginRequest request){
+        try {
+//            LoginResponse response =
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
     }
     @GetMapping("/find-by-email/{email}")
