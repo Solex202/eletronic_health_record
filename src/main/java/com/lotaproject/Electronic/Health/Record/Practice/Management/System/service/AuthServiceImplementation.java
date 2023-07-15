@@ -10,6 +10,7 @@ import com.lotaproject.Electronic.Health.Record.Practice.Management.System.excep
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.PatientDoesNotexistException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.security.JwtService;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.security.RefreshToken;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,14 +21,17 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ExceptionMessages.*;
 @Service
 @Slf4j
+@AllArgsConstructor
 public class AuthServiceImplementation implements AuthService {
     @Autowired
     AuthenticationManager authenticationManager;
@@ -39,6 +43,8 @@ public class AuthServiceImplementation implements AuthService {
 
     @Autowired
     private RefreshTokenService refreshTokenService;
+
+    private final BCryptPasswordEncoder encoder;
     @Autowired
     JwtService jwtService;
 
@@ -52,10 +58,21 @@ public class AuthServiceImplementation implements AuthService {
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
         try{
-        Patient patient = findByMail(loginRequest.getEmail());
+        boolean isPresent = patientRepository.existsByEmail(loginRequest.getEmail());
         StringBuilder builder = new StringBuilder();
-        if(!loginRequest.getEmail().matches(patient.getEmail())) builder.append(INCORRECT_EMAIL.getMessage()).append("\n");
-        if(!loginRequest.getPassword().matches(patient.getPassword())) builder.append(INCORRECT_PASSWORD.getMessage());
+        if(!isPresent) builder.append(INCORRECT_EMAIL.getMessage()).append("\n");
+
+        Optional<Patient> p = patientRepository.findByEmail(loginRequest.getEmail());
+        Patient patient;
+        if (p.isPresent()) patient= p.get();
+        else {
+            builder.append(INCORRECT_PASSWORD.getMessage());
+            throw new AuthException(builder.toString());
+        }
+            System.out.println(encoder.matches(loginRequest.getPassword(), patient.getPassword()));
+            System.out.println(patient);
+
+        if(!encoder.matches(loginRequest.getPassword(), patient.getPassword())) builder.append(INCORRECT_PASSWORD.getMessage());
 
         if(!builder.isEmpty()){
             throw new AuthException(builder.toString());
@@ -90,7 +107,6 @@ public class AuthServiceImplementation implements AuthService {
         }
 //        return null;
     }
-
     @Override
     public void logout() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
