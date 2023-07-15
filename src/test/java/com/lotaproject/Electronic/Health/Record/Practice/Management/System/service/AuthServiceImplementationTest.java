@@ -9,7 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.AuthenticationException;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 @SpringBootTest
 class AuthServiceImplementationTest {
 
@@ -17,10 +18,26 @@ class AuthServiceImplementationTest {
     private AuthService authService;
 
     @Test
+    void testThatUserCanLogin(){
+
+        LoginRequest request = LoginRequest.builder()
+                .email("ferw@gmail.com")
+                .password("#Rems2222")
+                .build();
+
+        LoginResponse response = authService.login(request);
+        assertAll(
+                ()->
+        );
+//        assertThrows(ElectronicHealthException.class, ()-> authService.login(request));
+
+    }
+
+    @Test
     void testThatUserCannotLogin(){
 
         LoginRequest request = LoginRequest.builder()
-                .email("ferr@gmail.com")
+                .email("ferw@gmail.com")
                 .password("#Rems2222")
                 .build();
 
