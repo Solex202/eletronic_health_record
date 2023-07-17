@@ -5,7 +5,7 @@ import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Patient;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.UserDetailsImpl;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.PatientRepository;
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.AuthException;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.AuthenticationException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ElectronicHealthException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.PatientDoesNotexistException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.security.JwtService;
@@ -16,11 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -52,28 +49,25 @@ public class AuthServiceImplementation implements AuthService {
         return patientRepository.findByEmail(email).orElseThrow(()-> new PatientDoesNotexistException(String.format(PATIENT_WITH_EMAIL_DOESNOT_EXIST.getMessage(), email)));
     }
 
-    public Patient findByMail(String email){
-        return patientRepository.findByEmail(email).orElseThrow(()-> new PatientDoesNotexistException(INCORRECT_EMAIL.getMessage()));
-    }
+//    public Patient findByMail(String email){
+//        return patientRepository.findByEmail(email).orElseThrow(()-> new PatientDoesNotexistException(INCORRECT_EMAIL.getMessage()));
+//    }
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
         try{
         boolean isPresent = patientRepository.existsByEmail(loginRequest.getEmail());
-        StringBuilder builder = new StringBuilder();
-        if(!isPresent) builder.append(INCORRECT_EMAIL.getMessage()).append("\n");
+
+        if(!isPresent) throw new AuthenticationException(INCORRECT_EMAIL_OR_PASSWORD.getMessage());
 
         Optional<Patient> p = patientRepository.findByEmail(loginRequest.getEmail());
         Patient patient;
         if (p.isPresent()) patient= p.get();
         else {
-            builder.append(INCORRECT_PASSWORD.getMessage());
-            throw new AuthException(builder.toString());
+            throw new AuthenticationException(INCORRECT_EMAIL_OR_PASSWORD.getMessage());
         }
-        if(!encoder.matches(loginRequest.getPassword(), patient.getPassword())) builder.append(INCORRECT_PASSWORD.getMessage());
+        if(!encoder.matches(loginRequest.getPassword(), patient.getPassword())) throw new AuthenticationException(INCORRECT_EMAIL_OR_PASSWORD.getMessage());
 
-        if(!builder.isEmpty()){
-            throw new AuthException(builder.toString());
-        }
+
 
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
@@ -98,7 +92,7 @@ public class AuthServiceImplementation implements AuthService {
                 .email(userDetails.getUsername())
                 .id(userDetails.getId())
                 .build();
-        } catch (AuthenticationException e) {
+        } catch (org.springframework.security.core.AuthenticationException e) {
             System.out.println(e.getMessage());
             throw new ElectronicHealthException(e.getMessage());
         }

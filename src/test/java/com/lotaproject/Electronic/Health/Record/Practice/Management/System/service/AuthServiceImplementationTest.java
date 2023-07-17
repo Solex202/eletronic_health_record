@@ -2,12 +2,10 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.serv
 
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.LoginRequest;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.LoginResponse;
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.AuthException;
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ElectronicHealthException;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.AuthenticationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.AuthenticationException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -23,14 +21,13 @@ class AuthServiceImplementationTest {
 
         LoginRequest request = LoginRequest.builder()
                 .email("fer@gmail.com")
-                .password("#Rems2222")
+                .password("#Rems2222m")
                 .build();
 
         LoginResponse response = authService.login(request);
         assertAll(
                 ()-> assertThat(response.getEmail(), is("fer@gmail.com"))
         );
-//        assertThrows(ElectronicHealthException.class, ()-> authService.login(request));
 
     }
 
@@ -42,7 +39,7 @@ class AuthServiceImplementationTest {
                 .password("#Rems2222")
                 .build();
 
-        assertThrows(AuthException.class, ()-> authService.login(request));
+        assertThrows(AuthenticationException.class, ()-> authService.login(request));
 
     }
 

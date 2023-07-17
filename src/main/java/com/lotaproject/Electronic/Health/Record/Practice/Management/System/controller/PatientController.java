@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/health-record")
 public class PatientController {
-
     @Autowired
     private PatientService patientService;
     @PostMapping("/registration")
@@ -27,23 +26,13 @@ public class PatientController {
         try {
             ApiResponse<?> response = patientService.registerPatient(registerPatientRequest);
             response.setStatusCode(201);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (ElectronicHealthException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 
         }
     }
-        @PostMapping("/login")
-        public ResponseEntity<?> login(@RequestBody LoginRequest request){
-        try {
-//            LoginResponse response =
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
 
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-    }
     @GetMapping("/find-by-email/{email}")
     public ResponseEntity<?> findByEmail(@PathVariable String email){
         try{

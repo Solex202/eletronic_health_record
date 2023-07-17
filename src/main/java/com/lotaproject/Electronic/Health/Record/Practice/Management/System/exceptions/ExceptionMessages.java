@@ -9,12 +9,9 @@ public enum ExceptionMessages {
 
     INVALID_PASSWORD("Password is too weak,password must contain at least 1 upper case, 1 special , 1 number and must be minimum of 8 characters"),
 
-    INCORRECT_EMAIL("Email is incorrect"),
+    INCORRECT_EMAIL_OR_PASSWORD("Email or password is incorrect");
 
-    INCORRECT_PASSWORD("Password is incorrect")
-
-
-    ;
+//    INCORRECT_PASSWORD("Password is incorrect");
     private final String message;
 
     ExceptionMessages(String message) {

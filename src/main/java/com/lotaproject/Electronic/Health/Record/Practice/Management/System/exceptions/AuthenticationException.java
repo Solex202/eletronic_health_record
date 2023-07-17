@@ -1,8 +1,8 @@
 package com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions;
 
-public class AuthException extends RuntimeException{
+public class AuthenticationException extends RuntimeException{
 
-    public AuthException(String message) {
+    public AuthenticationException(String message) {
         super(message);
     }
 }
