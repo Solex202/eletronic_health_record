@@ -37,10 +37,8 @@ public class AuthServiceImplementation implements AuthService {
 
 //    @Autowired
 //    RoleRepository roleRepository;
-
     @Autowired
     private RefreshTokenService refreshTokenService;
-
     private final BCryptPasswordEncoder encoder;
     @Autowired
     JwtService jwtService;
@@ -49,9 +47,6 @@ public class AuthServiceImplementation implements AuthService {
         return patientRepository.findByEmail(email).orElseThrow(()-> new PatientDoesNotexistException(String.format(PATIENT_WITH_EMAIL_DOESNOT_EXIST.getMessage(), email)));
     }
 
-//    public Patient findByMail(String email){
-//        return patientRepository.findByEmail(email).orElseThrow(()-> new PatientDoesNotexistException(INCORRECT_EMAIL.getMessage()));
-//    }
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
         try{
@@ -66,8 +61,6 @@ public class AuthServiceImplementation implements AuthService {
             throw new AuthenticationException(INCORRECT_EMAIL_OR_PASSWORD.getMessage());
         }
         if(!encoder.matches(loginRequest.getPassword(), patient.getPassword())) throw new AuthenticationException(INCORRECT_EMAIL_OR_PASSWORD.getMessage());
-
-
 
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
@@ -96,10 +89,12 @@ public class AuthServiceImplementation implements AuthService {
             System.out.println(e.getMessage());
             throw new ElectronicHealthException(e.getMessage());
         }
-//        return null;
     }
     @Override
-    public void logout() {
+    public void logout(String authorizationHeader) {
+
+        String token = authorizationHeader.replace("Bearer", "");
+        refreshTokenService.deleteRefreshToken(token);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
             SecurityContextHolder.getContext().setAuthentication(null);
