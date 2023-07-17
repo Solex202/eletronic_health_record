@@ -91,13 +91,28 @@ public class AuthServiceImplementation implements AuthService {
         }
     }
     @Override
-    public void logout(String authorizationHeader) {
+    public String logout(String authorizationHeader) {
+        try {
+            String token = authorizationHeader.replace("Bearer", "");
+            refreshTokenService.deleteRefreshToken(token);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null) {
+                SecurityContextHolder.getContext().setAuthentication(null);
+            }
 
-        String token = authorizationHeader.replace("Bearer", "");
-        refreshTokenService.deleteRefreshToken(token);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            SecurityContextHolder.getContext().setAuthentication(null);
+            String userEmail = jwtService.extractUsername(token);
+            Optional<Patient> p = patientRepository.findByEmail(userEmail);
+            if (p.isPresent()) {
+                Patient patient = p.get();
+                patient.setLoginStatus(false);
+                patientRepository.save(patient);
+
+            }
+            return "Logout Successful";
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+
     }
 }
