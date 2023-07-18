@@ -4,5 +4,5 @@ import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface DoctorRepository extends MongoRepository<Doctor, String> {
-    boolean existByEmail(String email);
+    boolean existsByEmail(String email);
 }

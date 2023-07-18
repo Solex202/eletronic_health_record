@@ -8,11 +8,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.login.LoginException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ExceptionMessages.EMAIL_ALREADY_EXCEPTION;
-import static com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ExceptionMessages.EMAIL_IS_INVALID;
+import static com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ExceptionMessages.*;
 
 @Service
 
@@ -25,8 +25,8 @@ public class DoctorServiceImplementation implements DoctorService{
     @Override
     public ApiResponse<?> saveDoctor(Doctor doctor) {
         if(!emailIsValid(doctor.getEmail())) throw new ElectronicHealthException(EMAIL_IS_INVALID.getMessage());
-        if(doctorRepository.existByEmail(doctor.getEmail())) throw new ElectronicHealthException(EMAIL_ALREADY_EXCEPTION.getMessage());
-
+        if(doctorRepository.existsByEmail(doctor.getEmail())) throw new ElectronicHealthException(EMAIL_ALREADY_EXCEPTION.getMessage());
+        if(!passwordIsValid(doctor.getPassword())) throw new ElectronicHealthException(INVALID_PASSWORD.getMessage());
         Doctor newDoctor = doctorRepository.save(doctor);
 
         return ApiResponse.builder().message("Successful").data(newDoctor).build();
@@ -37,6 +37,16 @@ public class DoctorServiceImplementation implements DoctorService{
         String regex = "[a-zA-z][\\w-]{1,20}@\\w{2,20}\\.\\w{2,3}$";
         Pattern pattern  = Pattern.compile(regex);
         Matcher matcher =  pattern.matcher(email);
+
+        return matcher.matches();
+    }
+
+    private boolean passwordIsValid(String password) {
+        String regex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20}$";
+        Pattern pattern  = Pattern.compile(regex);
+        Matcher matcher =  pattern.matcher(password);
+
+
 
         return matcher.matches();
     }

@@ -23,7 +23,7 @@ class DoctorServiceImplementationTest {
 
     @Test
     void testThatCanCreateDoctor(){
-        Doctor doctor = Doctor.builder().name("doctor jesus").password("password").email("doctor").build();
+        Doctor doctor = Doctor.builder().name("doctor jesus").password("#1Ppassword").email("doctor@gmail.com").build();
         ApiResponse<?> response = doctorService.saveDoctor(doctor);
 
         assertAll(
