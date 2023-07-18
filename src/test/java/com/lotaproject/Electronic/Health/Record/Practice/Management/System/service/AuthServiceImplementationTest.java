@@ -20,7 +20,7 @@ class AuthServiceImplementationTest {
     void testThatUserCanLogin(){
 
         LoginRequest request = LoginRequest.builder()
-                .email("fer@gmail.com")
+                .email(" ")
                 .password("#Rems2222m")
                 .build();
 
@@ -41,6 +41,11 @@ class AuthServiceImplementationTest {
 
         assertThrows(AuthenticationException.class, ()-> authService.login(request));
 
+    }
+
+    @Test
+    void logOut(){
+        String response = authService.logout("");
     }
 
 }
