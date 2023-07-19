@@ -115,7 +115,7 @@ public class PatientServiceImplementation implements PatientService{
         if(request1.getOccupation() != null) patient.setOccupation(request1.getOccupation());
 
         var newPatient = patientRepository.save(patient);
-        return ApiResponse.builder().message("Updated Successful").data(newPatient).build();
+        return ApiResponse.builder().message(UPDATE_MESSAGE.getMessage()).data(newPatient).build();
     }
     @Override
     public PaginatedPatientResponse findByName(int pageNumber, int pageSize,String name) {

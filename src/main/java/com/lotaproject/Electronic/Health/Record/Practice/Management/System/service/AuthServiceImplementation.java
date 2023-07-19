@@ -92,6 +92,7 @@ public class AuthServiceImplementation implements AuthService {
     }
     @Override
     public String logout(String authorizationHeader) {
+//        TODO FIXING
         try {
             String token = authorizationHeader.replace("Bearer", "");
             refreshTokenService.deleteRefreshToken(token);
