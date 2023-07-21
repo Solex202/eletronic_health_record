@@ -39,6 +39,13 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+
+			<dependency>
+				<groupId>com.mailjet</groupId>
+				<artifactId>mailjet-client</artifactId>
+				<version>4.2.0</version>
+			</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
