@@ -11,7 +11,7 @@ import com.mailjet.client.resource.Emailv31;
 import org.json.JSONArray;
 import org.json.JSONObject;
 public class MailSender {
-        public static void main(String[] args) throws MailjetException, MailjetSocketTimeoutException {
+        public static void send() throws MailjetException, MailjetSocketTimeoutException {
             MailjetClient client;
             MailjetRequest request;
             MailjetResponse response;
