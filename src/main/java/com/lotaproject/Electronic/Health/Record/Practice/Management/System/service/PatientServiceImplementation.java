@@ -10,6 +10,8 @@ import com.lotaproject.Electronic.Health.Record.Practice.Management.System.email
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.CannotRegisterPatientException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ElectronicHealthException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.PatientDoesNotexistException;
+import freemarker.template.Configuration;
+import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.internal.bytebuddy.utility.RandomString;
@@ -20,12 +22,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,16 +38,18 @@ import static com.lotaproject.Electronic.Health.Record.Practice.Management.Syste
 @Slf4j
 public class PatientServiceImplementation implements PatientService{
     private final MedicalHistoryService medicalHistoryService;
-
     @Autowired
     private  EmailSender emailSender;
-
+    @Autowired
+    Configuration configuration;
     private final BCryptPasswordEncoder encoder;
     @Autowired
     private  PatientRepository patientRepository;
     @Override
-    public ApiResponse<?> registerPatient(RegisterPatientRequest request) {
+    public ApiResponse<?> registerPatient(RegisterPatientRequest request) throws IOException, TemplateException {
         var patient = new Patient();
+
+        var builder = new StringBuilder();
 
         String patientIdentity = RandomString.make(7);
         Set<Role> role = new HashSet<>();
@@ -85,6 +89,9 @@ public class PatientServiceImplementation implements PatientService{
         patient.setModifiedDate(LocalDateTime.now());
 
         var savedPatient = patientRepository.save(patient);
+        Map<String, Object> map = new HashMap<>();
+        builder.append(FreeMarkerTemplateUtils.processTemplateIntoString(configuration.getTemplate("patientservice.ftlh"), map)
+        );
 
         emailSender.send(request.getEmail(), buildEmail(request.getFirstName()));
 
@@ -129,7 +136,6 @@ public class PatientServiceImplementation implements PatientService{
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, Sort.by(order));
 
         Page<Patient> listOfPatient = patientRepository.findByFirstNameContainingOrLastNameContaining(name, name,pageable);
-        log.info("list of patients ----> {}", listOfPatient.toList());
         return PaginatedPatientResponse.builder()
                 .patients(listOfPatient.toList())
                 .noOfPatients(listOfPatient.getContent().size())
@@ -147,7 +153,6 @@ public class PatientServiceImplementation implements PatientService{
             }else throw new CannotRegisterPatientException(EMAIL_ALREADY_EXCEPTION.getMessage());
         }
     }
-
     private boolean emailIsValid(String email) {
 
         String regex = "[a-zA-z][\\w-]{1,20}@\\w{2,20}\\.\\w{2,3}$";
@@ -164,6 +169,7 @@ public class PatientServiceImplementation implements PatientService{
 
         return matcher.matches();
     }
+
 
     private String buildEmail(String name) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
@@ -221,7 +227,7 @@ public class PatientServiceImplementation implements PatientService{
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
                 "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n" +
                 "        \n" +
-                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Thank you for registering. Please click on the below link to activate your account: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\" \">Activate Now</a> </p></blockquote>\n Link will expire in 15 minutes. <p>See you soon</p>" +
+                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Thank you for registering. Please click on the below link to activate your account: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + "\">Activate Now</a> </p></blockquote>\n Link will expire in 15 minutes. <p>See you soon</p>" +
                 "        \n" +
                 "      </td>\n" +
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +

@@ -10,6 +10,7 @@ import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Patient;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.CannotRegisterPatientException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.PatientDoesNotexistException;
+import freemarker.template.TemplateException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +34,7 @@ class PatientServiceImplementationTest {
     void setUp() {
     }
     @Test
-    void testThatCanRegisterPatient(){
+    void testThatCanRegisterPatient() throws TemplateException, IOException {
         MedicalHistory medicalHistory = new MedicalHistory();
         List<String> ailments = new ArrayList<>();
         ailments.add("headaches");
@@ -53,7 +55,7 @@ class PatientServiceImplementationTest {
 
         RegisterPatientRequest request = RegisterPatientRequest.builder()
                 .gender("MALE")
-                .email("deolaoladeji@gmail.com")
+                .email("ezeirunnechiamaka@gmail.com")
                 .password("#Rems2222")
                 .address("9 road")
                 .guardian("mr him")
