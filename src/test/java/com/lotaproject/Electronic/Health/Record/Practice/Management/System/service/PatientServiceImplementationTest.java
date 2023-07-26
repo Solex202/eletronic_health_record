@@ -49,9 +49,11 @@ class PatientServiceImplementationTest {
         medicalHistory.setAllergy(allergy);
         medicalHistory.setMedication(medication);
 
+//        Patient patient = Patient.builder().
+
         RegisterPatientRequest request = RegisterPatientRequest.builder()
                 .gender("MALE")
-                .email("fer@gmail.com")
+                .email("deolaoladeji@gmail.com")
                 .password("#Rems2222")
                 .address("9 road")
                 .guardian("mr him")
