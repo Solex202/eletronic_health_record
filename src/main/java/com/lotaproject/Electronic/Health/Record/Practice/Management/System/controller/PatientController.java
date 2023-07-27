@@ -11,10 +11,13 @@ import com.lotaproject.Electronic.Health.Record.Practice.Management.System.excep
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ElectronicHealthException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.PatientDoesNotexistException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.service.PatientService;
+import freemarker.template.TemplateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/health-record")
@@ -27,8 +30,9 @@ public class PatientController {
             ApiResponse<?> response = patientService.registerPatient(registerPatientRequest);
             response.setStatusCode(201);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (ElectronicHealthException e) {
+        } catch (ElectronicHealthException | TemplateException | IOException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+
 
         }
     }

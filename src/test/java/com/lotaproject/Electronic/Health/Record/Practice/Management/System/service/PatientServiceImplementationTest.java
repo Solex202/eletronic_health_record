@@ -1,7 +1,5 @@
 package com.lotaproject.Electronic.Health.Record.Practice.Management.System.service;
 
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.LoginRequest;
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.LoginResponse;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.RegisterPatientRequest;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.UpdatePatientDetailRequest;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
@@ -55,12 +53,12 @@ class PatientServiceImplementationTest {
 
         RegisterPatientRequest request = RegisterPatientRequest.builder()
                 .gender("MALE")
-                .email("ezeirunnechiamaka@gmail.com")
+                .email("ezeirunnechiamaka123@gmail.com")
                 .password("#Rems2222")
                 .address("9 road")
                 .guardian("mr him")
-                .firstName("lota")
-                .lastName("chi")
+                .firstName("Paulinus")
+                .lastName("Nri")
                 .phoneNumber("080343332")
                 .genotype("AA")
                 .bloodGroup("O_POSITIVE")

@@ -1,20 +1,17 @@
-<!DOCTYPE html
-PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-
+<!doctype html>
+<html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Escalation Notification</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@200;400;500;600;700;800;900&display=swap"
-rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My medical history application</title>
 </head>
-
-
-<body style="margin: 0; padding: 0; font-family: 'Raleway', sans-serif;">
-
+<body>
+<div style="margin-top: 10px">Greetings, ${name}</div>
+<div>Your username is <b>${name}</b></div>
+<br/>
+<div>It works, their father</div>
+<div>Better finish your task before coming back here</div>
+<div> Have a nice day..!</div>
 </body>
-
-</html
+</html>
