@@ -2,11 +2,14 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.serv
 
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Doctor;
+import freemarker.template.TemplateException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -22,8 +25,8 @@ class DoctorServiceImplementationTest {
     }
 
     @Test
-    void testThatCanCreateDoctor(){
-        Doctor doctor = Doctor.builder().password("#1Ppassword").email("doctor@gmail.com").build();
+    void testThatCanCreateDoctor() throws TemplateException, IOException {
+        Doctor doctor = Doctor.builder().firstName("quack").lastName("doc").password("#1Ppassword").email("doctor@gmail.com").build();
         ApiResponse<?> response = doctorService.saveDoctor(doctor);
 
         assertAll(
