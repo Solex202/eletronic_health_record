@@ -10,6 +10,8 @@ import com.lotaproject.Electronic.Health.Record.Practice.Management.System.email
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.CannotRegisterPatientException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ElectronicHealthException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.PatientDoesNotexistException;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.token.ConfirmationToken;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.token.ConfirmationTokenService;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
@@ -46,6 +48,9 @@ public class PatientServiceImplementation implements PatientService{
     private final BCryptPasswordEncoder encoder;
     @Autowired
     private  PatientRepository patientRepository;
+
+    @Autowired
+    private ConfirmationTokenService confirmationTokenService;
     @Override
     public ApiResponse<?> registerPatient(RegisterPatientRequest request) throws IOException, TemplateException {
         var patient = new Patient();
@@ -90,16 +95,19 @@ public class PatientServiceImplementation implements PatientService{
         patient.setModifiedDate(LocalDateTime.now());
 
         var savedPatient = patientRepository.save(patient);
-//        StringWriter writer = new StringWriter();
+        String token = UUID.randomUUID().toString();
+        ConfirmationToken confirmationToken = new ConfirmationToken(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(15), savedPatient);
+        confirmationTokenService.saveConfirmationToken(confirmationToken);
         Map<String, Object> map = new HashMap<>();
         map.put("name", request.getFirstName() + " "+ request.getLastName());
+        map.put("token", token);
 //        configuration.getTemplate("patientservice.ftlh").process(map, writer);
         builder.append(FreeMarkerTemplateUtils.processTemplateIntoString(configuration.getTemplate("patientservice.ftlh"), map)
         );
 
         emailSender.send(request.getEmail(), builder.toString());
 
-        return ApiResponse.builder().message("Registration Successfully").data(savedPatient).build();
+        return ApiResponse.builder().message("Registration Successfully").token(token).data(savedPatient).build();
 
     }
     private void registerPatientValidation(RegisterPatientRequest request) {

@@ -9,6 +9,7 @@
 <body>
     <div style="margin-top: 10px">Greetings, ${name}</div>
     <div>Your username is <b>${name}</b></div>
+    <div>Please confirm your email <b>${token}</b></div>
     <br/>
     <div>It works, their father</div>
     <div> Have a nice day..!</div>
