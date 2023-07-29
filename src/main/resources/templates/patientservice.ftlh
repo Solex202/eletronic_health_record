@@ -7,11 +7,10 @@
     <title>My medical history application</title>
 </head>
 <body>
-<div style="margin-top: 10px">Greetings, ${name}</div>
-<div>Your username is <b>${name}</b></div>
-<br/>
-<div>It works, their father</div>
-<div>Better finish your task before coming back here</div>
-<div> Have a nice day..!</div>
+    <div style="margin-top: 10px">Greetings, ${name}</div>
+    <div>Your username is <b>${name}</b></div>
+    <br/>
+    <div>It works, their father</div>
+    <div> Have a nice day..!</div>
 </body>
 </html>
