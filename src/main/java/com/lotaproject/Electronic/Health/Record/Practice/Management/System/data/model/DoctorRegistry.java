@@ -5,13 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.aggregation.DateOperators;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 @Data
@@ -19,13 +15,14 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Document
-public class DoctorWeeklyRegistry {
+public class DoctorRegistry {
 
     @Id
     private String id;
+    private String doctorId;
     private String doctorEmail;
-    private List<LocalTime> availableTimes;
-    private List<DayOfWeek> availableDates;
+    private List<ScheduleRegistry> scheduleRegistries;
+
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 }

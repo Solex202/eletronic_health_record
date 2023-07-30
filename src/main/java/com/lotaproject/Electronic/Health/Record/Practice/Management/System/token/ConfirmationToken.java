@@ -1,5 +1,6 @@
 package com.lotaproject.Electronic.Health.Record.Practice.Management.System.token;
 
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Doctor;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Patient;
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -24,11 +25,21 @@ public class ConfirmationToken {
 
     @DBRef
     private Patient patient;
+
+    @DBRef
+    private Doctor doctor;
     public ConfirmationToken(String token, LocalDateTime createdAt, LocalDateTime expiresAt, Patient patient) {
         this.token = token;
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;
         this.patient = patient;
+    }
+
+    public ConfirmationToken(String token, LocalDateTime createdAt, LocalDateTime expiresAt, Doctor doctor) {
+        this.token = token;
+        this.createdAt = createdAt;
+        this.expiresAt = expiresAt;
+        this.doctor = doctor;
     }
 
 }

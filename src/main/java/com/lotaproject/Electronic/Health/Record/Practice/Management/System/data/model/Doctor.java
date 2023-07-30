@@ -22,6 +22,7 @@ public class Doctor {
     private String lastName;
     private String email;
     private String password;
+    private String uniqueId;
     private LocalDateTime registeredDate;
     private LocalDateTime modifiedDate;
 //    private List<AppointmentForm> appointments;

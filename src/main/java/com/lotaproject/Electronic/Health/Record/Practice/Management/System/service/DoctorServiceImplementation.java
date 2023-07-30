@@ -5,11 +5,14 @@ import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.DoctorRepository;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.email.EmailSender;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ElectronicHealthException;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.token.ConfirmationToken;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.token.ConfirmationTokenService;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.internal.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,9 +40,9 @@ public class DoctorServiceImplementation implements DoctorService{
     Configuration configuration;
     @Autowired
     private DoctorRepository doctorRepository;
-
     private final BCryptPasswordEncoder encoder;
-
+    @Autowired
+    private ConfirmationTokenService confirmationTokenService;
     @Autowired
     private EmailSender emailSender;
     @Override
@@ -48,14 +52,20 @@ public class DoctorServiceImplementation implements DoctorService{
         if(doctorRepository.existsByEmail(doctor.getEmail())) throw new ElectronicHealthException(EMAIL_ALREADY_EXCEPTION.getMessage());
         if(!passwordIsValid(doctor.getPassword())) throw new ElectronicHealthException(INVALID_PASSWORD.getMessage());
         String encodedPassword = encoder.encode(doctor.getPassword());
+        String doctorIdentity = RandomString.make(7);
         doctor.setRegisteredDate(LocalDateTime.now());
         doctor.setModifiedDate(LocalDateTime.now());
         doctor.setPassword(encodedPassword);
+        doctor.setUniqueId(doctorIdentity);
         Doctor newDoctor = doctorRepository.save(doctor);
 
+        String token = UUID.randomUUID().toString();
+        ConfirmationToken confirmationToken = new ConfirmationToken(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(15), newDoctor);
+        confirmationTokenService.saveConfirmationToken(confirmationToken);
         var builder = new StringBuilder();
         Map<String, Object> map = new HashMap<>();
         map.put("name", doctor.getFirstName() + " "+ doctor.getLastName());
+        map.put("token", token);
         builder.append(FreeMarkerTemplateUtils.processTemplateIntoString(configuration.getTemplate("patientservice.ftlh"), map)
         );
 

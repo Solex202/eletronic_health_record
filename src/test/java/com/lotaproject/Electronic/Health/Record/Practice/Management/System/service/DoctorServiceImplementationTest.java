@@ -26,7 +26,7 @@ class DoctorServiceImplementationTest {
 
     @Test
     void testThatCanCreateDoctor() throws TemplateException, IOException {
-        Doctor doctor = Doctor.builder().firstName("quack").lastName("doc").password("#1Ppassword").email("doctor@gmail.com").build();
+        Doctor doctor = Doctor.builder().firstName("quackish").lastName("doc").password("#1Ppassword").email("doctors@gmail.com").build();
         ApiResponse<?> response = doctorService.saveDoctor(doctor);
 
         assertAll(
