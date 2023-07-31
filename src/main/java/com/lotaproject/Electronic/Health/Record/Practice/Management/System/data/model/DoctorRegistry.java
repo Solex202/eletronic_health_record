@@ -8,7 +8,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -22,7 +24,8 @@ public class DoctorRegistry {
     private String doctorId;
     private String doctorEmail;
     private List<ScheduleRegistry> scheduleRegistries;
-
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
+    private Map<String, List<LocalTime>> thirtyMinutesInterval;
+
 }

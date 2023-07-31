@@ -45,12 +45,19 @@ class DoctorRegistryServiceImplTest {
 
 
         List<ScheduleRegistry> scheduleRegistryList = new ArrayList<>();
-        ScheduleRegistry scheduleRegistry = new ScheduleRegistry();
-        scheduleRegistry.setFrom(LocalDateTime.of(2023,9,23,9,0));
-        scheduleRegistry.setTo(LocalDateTime.of(2023, 9,23,17,20));
-        scheduleRegistry.setBreakPeriod(breakPeriodList);
+        ScheduleRegistry scheduleRegistry1 = new ScheduleRegistry();
+        scheduleRegistry1.setFrom(LocalDateTime.of(2023,9,23,9,0));
+        scheduleRegistry1.setTo(LocalDateTime.of(2023, 9,23,17,20));
+        scheduleRegistry1.setBreakPeriod(breakPeriodList);
 
-        scheduleRegistryList.add(scheduleRegistry);
+        scheduleRegistryList.add(scheduleRegistry1);
+
+        ScheduleRegistry scheduleRegistry2 = new ScheduleRegistry();
+        scheduleRegistry2.setFrom(LocalDateTime.of(2023,9,24,11,0));
+        scheduleRegistry2.setTo(LocalDateTime.of(2023, 9,24,14,20));
+        scheduleRegistry2.setBreakPeriod(breakPeriodList);
+
+        scheduleRegistryList.add(scheduleRegistry2);
 
         DoctorRegistry doctorRegistry = new DoctorRegistry();
         doctorRegistry.setDoctorId("1uweaiG");

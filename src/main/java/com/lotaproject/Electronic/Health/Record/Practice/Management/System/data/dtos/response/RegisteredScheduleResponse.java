@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Data
@@ -16,6 +18,8 @@ public class RegisteredScheduleResponse {
     private String doctorId;
     private String doctorEmail;
     private String doctorName;
-//    private List<Schedule> scheduleRegistries;
+    private LocalDate date;
+
+    private List<LocalTime> intervals;
 
 }

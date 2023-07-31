@@ -4,51 +4,67 @@ import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.RegisteredScheduleResponse;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.DoctorRegistry;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.ScheduleRegistry;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.DoctorRegistryRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
 public class DoctorRegistryServiceImpl implements DoctorRegistryService {
+
+    @Autowired
+    private DoctorRegistryRepository doctorRegistryRepository;
     @Override
     public ApiResponse<?> createSchedule(DoctorRegistry doctorRegistry) {
 
         List<ScheduleRegistry> scheduleRegistries = doctorRegistry.getScheduleRegistries();
+
+        List<LocalTime> intervals = new ArrayList<>();
+        DoctorRegistry registry = new DoctorRegistry();
+
 
         for (ScheduleRegistry scheduleRegistry : scheduleRegistries) {
             LocalDateTime from = scheduleRegistry.getFrom();
             LocalDateTime to = scheduleRegistry.getTo();
             LocalDate date = from.toLocalDate();
 
-            List<LocalTime> intervals = new ArrayList<>();
-            int minutesToAdd = 30;
-//            from = from.plusMinutes(minutesToAdd);
-            while (!from.isAfter(to)){
-                intervals.add(from.toLocalTime());
-                from = from.plusMinutes(minutesToAdd);
+            while (!from.isAfter(to)) {
+                intervals.add(LocalTime.of(from.getHour(), from.getMinute()));
+                from = from.plusMinutes(30);
             }
+            Map<String, List<LocalTime>> m = new HashMap<>();
+            m.put(date.toString(), intervals);
 
-            log.info("INTERVALS-----> {}", intervals);
-            log.info("DATE ----> {}", date);
+            if(!registry.getThirtyMinutesInterval().containsKey(date.toString())) registry.getThirtyMinutesInterval().put(date.toString(), intervals);
+            else registry.setThirtyMinutesInterval(m);
 
-            int fromHr= from.getHour();
-            int toHr= to.getHour();
-
-            log.info("FROM HR ----> {}", fromHr);
-            log.info("TO HR ----> {}", toHr);
-
+            log.info("M----> {}", m);
         }
+
+
+        log.info("INTERVALS {}", intervals);
+
+        registry.setDoctorId(doctorRegistry.getDoctorId());
+        registry.setDoctorEmail(doctorRegistry.getDoctorEmail());
+        registry.setCreatedDate(LocalDateTime.now());
+        registry.setModifiedDate(LocalDateTime.now());
+        registry.setScheduleRegistries(scheduleRegistries);
+
+        doctorRegistryRepository.save(registry);
 
         RegisteredScheduleResponse response =RegisteredScheduleResponse.builder()
                 .doctorId(doctorRegistry.getDoctorId())
                 .doctorEmail(doctorRegistry.getDoctorEmail())
+//                .date(d)
                 .build();
 
         return null;
