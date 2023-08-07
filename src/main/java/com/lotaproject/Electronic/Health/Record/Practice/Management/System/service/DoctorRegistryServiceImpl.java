@@ -28,11 +28,11 @@ public class DoctorRegistryServiceImpl implements DoctorRegistryService {
 
         List<ScheduleRegistry> scheduleRegistries = doctorRegistry.getScheduleRegistries();
 
-        List<LocalTime> intervals = new ArrayList<>();
         DoctorRegistry registry = new DoctorRegistry();
 
-
         for (ScheduleRegistry scheduleRegistry : scheduleRegistries) {
+            List<LocalTime> intervals = new ArrayList<>();
+
             LocalDateTime from = scheduleRegistry.getFrom();
             LocalDateTime to = scheduleRegistry.getTo();
             LocalDate date = from.toLocalDate();
@@ -43,16 +43,13 @@ public class DoctorRegistryServiceImpl implements DoctorRegistryService {
             }
             Map<String, List<LocalTime>> m = new HashMap<>();
             m.put(date.toString(), intervals);
+             log.info("INTERVALS {}", intervals);
+            log.info("MAAAAAAAAAAP----> {}", m);
 
-            if(!registry.getThirtyMinutesInterval().containsKey(date.toString())) registry.getThirtyMinutesInterval().put(date.toString(), intervals);
+            if(registry.getThirtyMinutesInterval()!=null && !registry.getThirtyMinutesInterval().containsKey(date.toString())) registry.getThirtyMinutesInterval().put(date.toString(), intervals);
             else registry.setThirtyMinutesInterval(m);
 
-            log.info("M----> {}", m);
         }
-
-
-        log.info("INTERVALS {}", intervals);
-
         registry.setDoctorId(doctorRegistry.getDoctorId());
         registry.setDoctorEmail(doctorRegistry.getDoctorEmail());
         registry.setCreatedDate(LocalDateTime.now());
