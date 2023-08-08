@@ -2,6 +2,7 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.serv
 
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.RegisteredScheduleResponse;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.BreakPeriod;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.DoctorRegistry;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.ScheduleRegistry;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.DoctorRegistryRepository;
@@ -20,7 +21,6 @@ import java.util.Map;
 @Service
 @Slf4j
 public class DoctorRegistryServiceImpl implements DoctorRegistryService {
-
     @Autowired
     private DoctorRegistryRepository doctorRegistryRepository;
     @Override
@@ -37,6 +37,8 @@ public class DoctorRegistryServiceImpl implements DoctorRegistryService {
             LocalDateTime to = scheduleRegistry.getTo();
             LocalDate date = from.toLocalDate();
 
+            List<BreakPeriod> breakPeriods = scheduleRegistry.getBreakPeriod();
+
             while (!from.isAfter(to)) {
                 intervals.add(LocalTime.of(from.getHour(), from.getMinute()));
                 from = from.plusMinutes(30);
@@ -46,7 +48,9 @@ public class DoctorRegistryServiceImpl implements DoctorRegistryService {
              log.info("INTERVALS {}", intervals);
             log.info("MAAAAAAAAAAP----> {}", m);
 
-            if(registry.getThirtyMinutesInterval()!=null && !registry.getThirtyMinutesInterval().containsKey(date.toString())) registry.getThirtyMinutesInterval().put(date.toString(), intervals);
+            if(registry.getThirtyMinutesInterval()!= null && !registry.getThirtyMinutesInterval().containsKey(date.toString())){
+                registry.getThirtyMinutesInterval().put(date.toString(), intervals);
+            }
             else registry.setThirtyMinutesInterval(m);
 
         }
@@ -64,6 +68,6 @@ public class DoctorRegistryServiceImpl implements DoctorRegistryService {
 //                .date(d)
                 .build();
 
-        return null;
+        return ApiResponse.builder().data(response).build();
     }
 }
