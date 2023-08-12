@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -75,7 +76,7 @@ public class DoctorRegistryServiceImpl implements DoctorRegistryService {
 
     private boolean isWithinBreakPeriods(LocalDateTime from, List<BreakPeriod> breakPeriods) {
         for (BreakPeriod breakPeriod : breakPeriods) {
-            if (from.isAfter(breakPeriod.getFrom()) && from.isBefore(breakPeriod.getTo())) {
+            if (from.toLocalTime().isAfter(breakPeriod.getFrom().minus(1L, ChronoUnit.MINUTES)) && from.toLocalTime().isBefore(breakPeriod.getTo())) {
                 return true;
             }
         }
