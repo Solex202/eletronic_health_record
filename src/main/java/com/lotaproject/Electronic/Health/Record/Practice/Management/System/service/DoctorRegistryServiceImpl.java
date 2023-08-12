@@ -39,14 +39,16 @@ public class DoctorRegistryServiceImpl implements DoctorRegistryService {
 
             List<BreakPeriod> breakPeriods = scheduleRegistry.getBreakPeriod();
 
-            while (!from.isAfter(to)) {
-                intervals.add(LocalTime.of(from.getHour(), from.getMinute()));
+            log.info("BREAK PERIODS {}",breakPeriods);
+
+            while (from.isBefore(to)) {
+                if (!isWithinBreakPeriods(from, breakPeriods)) {
+                    intervals.add(LocalTime.of(from.getHour(), from.getMinute()));
+                }
                 from = from.plusMinutes(30);
             }
             Map<String, List<LocalTime>> m = new HashMap<>();
             m.put(date.toString(), intervals);
-             log.info("INTERVALS {}", intervals);
-            log.info("MAAAAAAAAAAP----> {}", m);
 
             if(registry.getThirtyMinutesInterval()!= null && !registry.getThirtyMinutesInterval().containsKey(date.toString())){
                 registry.getThirtyMinutesInterval().put(date.toString(), intervals);
@@ -69,5 +71,14 @@ public class DoctorRegistryServiceImpl implements DoctorRegistryService {
                 .build();
 
         return ApiResponse.builder().data(response).build();
+    }
+
+    private boolean isWithinBreakPeriods(LocalDateTime from, List<BreakPeriod> breakPeriods) {
+        for (BreakPeriod breakPeriod : breakPeriods) {
+            if (from.isAfter(breakPeriod.getFrom()) && from.isBefore(breakPeriod.getTo())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
