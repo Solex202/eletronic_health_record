@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -20,6 +21,6 @@ public class RegisteredScheduleResponse {
     private String doctorName;
     private LocalDate date;
 
-    private List<LocalTime> intervals;
+    private Map<String,List<LocalTime>> thirtyMinutesIntervals;
 
 }

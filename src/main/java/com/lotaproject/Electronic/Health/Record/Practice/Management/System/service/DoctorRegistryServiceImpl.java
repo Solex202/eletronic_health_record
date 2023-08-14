@@ -42,7 +42,8 @@ public class DoctorRegistryServiceImpl implements DoctorRegistryService {
 
             log.info("BREAK PERIODS {}",breakPeriods);
 
-            while (from.isBefore(to)) {
+            while (from.isBefore(to) ) {
+
                 if (!isWithinBreakPeriods(from, breakPeriods)) {
                     intervals.add(LocalTime.of(from.getHour(), from.getMinute()));
                 }
@@ -51,7 +52,7 @@ public class DoctorRegistryServiceImpl implements DoctorRegistryService {
             Map<String, List<LocalTime>> m = new HashMap<>();
             m.put(date.toString(), intervals);
 
-            if(registry.getThirtyMinutesInterval()!= null && !registry.getThirtyMinutesInterval().containsKey(date.toString())){
+            if(registry.getThirtyMinutesInterval() != null && !registry.getThirtyMinutesInterval().containsKey(date.toString())){
                 registry.getThirtyMinutesInterval().put(date.toString(), intervals);
             }
             else registry.setThirtyMinutesInterval(m);
@@ -68,10 +69,14 @@ public class DoctorRegistryServiceImpl implements DoctorRegistryService {
         RegisteredScheduleResponse response =RegisteredScheduleResponse.builder()
                 .doctorId(doctorRegistry.getDoctorId())
                 .doctorEmail(doctorRegistry.getDoctorEmail())
-//                .date(d)
+                .thirtyMinutesIntervals(registry.getThirtyMinutesInterval())
                 .build();
 
-        return ApiResponse.builder().data(response).build();
+        log.info("RESPONSE ----> {}", response);
+
+        return ApiResponse.builder().data(response).message("Schedule created successfully").build();
+
+        //TODO, question, what makes a schedule unique?
     }
 
     private boolean isWithinBreakPeriods(LocalDateTime from, List<BreakPeriod> breakPeriods) {

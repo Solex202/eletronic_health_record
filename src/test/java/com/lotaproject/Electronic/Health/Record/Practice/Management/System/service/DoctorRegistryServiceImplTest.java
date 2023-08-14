@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 
 @SpringBootTest
 class DoctorRegistryServiceImplTest {
@@ -33,7 +36,7 @@ class DoctorRegistryServiceImplTest {
         List<BreakPeriod> breakPeriodList = new ArrayList<>();
         BreakPeriod breakPeriod1 = new BreakPeriod();
         breakPeriod1.setFrom(LocalTime.of(9, 0));
-        breakPeriod1.setTo(LocalTime.of(10, 0));
+        breakPeriod1.setTo(LocalTime.of(11, 0));
 
         breakPeriodList.add(breakPeriod1);
 
@@ -47,7 +50,7 @@ class DoctorRegistryServiceImplTest {
         List<ScheduleRegistry> scheduleRegistryList = new ArrayList<>();
         ScheduleRegistry scheduleRegistry1 = new ScheduleRegistry();
         scheduleRegistry1.setFrom(LocalDateTime.of(2023,9,23,9,0));
-        scheduleRegistry1.setTo(LocalDateTime.of(2023, 9,23,17,20));
+        scheduleRegistry1.setTo(LocalDateTime.of(2023, 9,23,17,0));
         scheduleRegistry1.setBreakPeriod(breakPeriodList);
 
         scheduleRegistryList.add(scheduleRegistry1);
@@ -65,6 +68,10 @@ class DoctorRegistryServiceImplTest {
         doctorRegistry.setScheduleRegistries(scheduleRegistryList);
 
         ApiResponse<?> response = doctorRegistryService.createSchedule(doctorRegistry);
+
+        assertAll(
+                ()-> assertThat(response.getMessage(),is("Schedule created successfully"))
+        );
 
     }
 
