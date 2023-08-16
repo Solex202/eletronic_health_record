@@ -3,7 +3,12 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.serv
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.AppointmentForm;
 
+import java.time.LocalDate;
+import java.util.List;
+
 public interface AppointmentService {
 
     ApiResponse<?> bookAppointment(String id, AppointmentForm form);
+
+    List<String> availableDoctors(LocalDate date);
 }

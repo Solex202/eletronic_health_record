@@ -46,7 +46,6 @@ class DoctorRegistryServiceImplTest {
 
         breakPeriodList.add(breakPeriod2);
 
-
         List<ScheduleRegistry> scheduleRegistryList = new ArrayList<>();
         ScheduleRegistry scheduleRegistry1 = new ScheduleRegistry();
         scheduleRegistry1.setFrom(LocalDateTime.of(2023,9,23,9,0));
@@ -63,8 +62,8 @@ class DoctorRegistryServiceImplTest {
         scheduleRegistryList.add(scheduleRegistry2);
 
         DoctorRegistry doctorRegistry = new DoctorRegistry();
-        doctorRegistry.setDoctorId("1uweaiG");
-        doctorRegistry.setDoctorEmail("doctors@gmail.com");
+        doctorRegistry.setDoctorId("hWd3N2E");
+        doctorRegistry.setDoctorEmail("ademiju@gmail.com");
         doctorRegistry.setScheduleRegistries(scheduleRegistryList);
 
         ApiResponse<?> response = doctorRegistryService.createSchedule(doctorRegistry);
