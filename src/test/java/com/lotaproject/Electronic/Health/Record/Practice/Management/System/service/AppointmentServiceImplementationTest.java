@@ -36,6 +36,12 @@ class AppointmentServiceImplementationTest {
 
     @Test
     void testThatCanGetDoctorsAvailableInADay(){
-        List<String> res = appointmentService.availableDoctors(LocalDate.of(2023,9,26));
+        List<String> res = appointmentService.availableDoctors(LocalDate.of(2023,9,23));
+        assertThat(res.size(), is(1));
+    }
+
+    @Test
+    void testThatCanGetDoctorAvailableTimes(){
+
     }
 }

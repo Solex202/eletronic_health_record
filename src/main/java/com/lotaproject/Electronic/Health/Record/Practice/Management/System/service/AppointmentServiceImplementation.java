@@ -66,9 +66,11 @@ public class AppointmentServiceImplementation implements AppointmentService{
             List<ScheduleRegistry> scheduleRegistries = doctorRegistry.getScheduleRegistries();
             for (ScheduleRegistry scheduleRegistry : scheduleRegistries) {
                 if(scheduleRegistry.getFrom().toLocalDate().equals(date)){
-                    Doctor doctor1 = getDoctor(doctorRegistry.getDoctorEmail());
-                    String doctor = doctorRegistry.getDoctorEmail();
-                    doctorList.add(doctor);
+                    Doctor doctor = getDoctor(doctorRegistry.getDoctorEmail());
+                    String doctorName ="Doctor "+ doctor.getFirstName() + " " + doctor.getLastName();
+                    String doctorEmail = doctorRegistry.getDoctorEmail();
+                    doctorList.add(doctorName);
+                    doctorList.add(doctorEmail);
                 }
             }
         }
