@@ -2,14 +2,16 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.serv
 
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.AppointmentFormDto;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.AppointmentForm;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public interface AppointmentService {
 
     ApiResponse<?> bookAppointment(String id, AppointmentFormDto form);
 
-    List<String> availableDoctors(LocalDate date);
+    List<String> getAvailableDoctors(LocalDate date);
+
+    List<LocalTime> getDoctorTimeSlots(String doctorName);
 }

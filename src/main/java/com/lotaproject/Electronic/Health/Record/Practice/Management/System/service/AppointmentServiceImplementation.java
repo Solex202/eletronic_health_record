@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +60,7 @@ public class AppointmentServiceImplementation implements AppointmentService{
         return  ApiResponse.builder().message("Appointment Booked successfully").data(newForm).build();
     }
 
-    public List<String> availableDoctors(LocalDate date){
+    public List<String> getAvailableDoctors(LocalDate date){
          List<DoctorRegistry> doctorRegistries = doctorRegistryRepository.findAll();
          List<String> doctorList = new ArrayList<>();
         for (DoctorRegistry doctorRegistry: doctorRegistries) {
@@ -78,5 +79,11 @@ public class AppointmentServiceImplementation implements AppointmentService{
         log.info("DOCTORS ---->{}",doctorList);
         return doctorList;
 
+    }
+
+    @Override
+    public List<LocalTime> getDoctorTimeSlots(String doctorName) {
+        DoctorRegistry doctorRegistry = doctorRegistryRepository.findByEmail(doctorName);
+        return null;
     }
 }

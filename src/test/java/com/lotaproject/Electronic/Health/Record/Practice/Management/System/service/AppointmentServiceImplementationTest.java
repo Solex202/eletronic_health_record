@@ -2,7 +2,6 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.serv
 
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.AppointmentFormDto;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.AppointmentForm;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,7 +10,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -36,12 +34,12 @@ class AppointmentServiceImplementationTest {
 
     @Test
     void testThatCanGetDoctorsAvailableInADay(){
-        List<String> res = appointmentService.availableDoctors(LocalDate.of(2023,9,23));
+        List<String> res = appointmentService.getAvailableDoctors(LocalDate.of(2023,9,23));
         assertThat(res.size(), is(1));
     }
 
     @Test
     void testThatCanGetDoctorAvailableTimes(){
-
+        List<LocalTime> res = appointmentService.getDoctorTimeSlots("ademiju@gmail.com");
     }
 }
