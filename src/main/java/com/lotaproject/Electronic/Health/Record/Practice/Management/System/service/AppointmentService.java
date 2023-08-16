@@ -13,5 +13,5 @@ public interface AppointmentService {
 
     List<String> getAvailableDoctors(LocalDate date);
 
-    List<LocalTime> getDoctorTimeSlots(String doctorName);
+    List<LocalTime> getDoctorTimeSlots(String doctorName, String date);
 }

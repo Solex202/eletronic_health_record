@@ -40,6 +40,6 @@ class AppointmentServiceImplementationTest {
 
     @Test
     void testThatCanGetDoctorAvailableTimes(){
-        List<LocalTime> res = appointmentService.getDoctorTimeSlots("ademiju@gmail.com");
+        List<LocalTime> res = appointmentService.getDoctorTimeSlots("ademiju@gmail.com", "2023-09-25");
     }
 }

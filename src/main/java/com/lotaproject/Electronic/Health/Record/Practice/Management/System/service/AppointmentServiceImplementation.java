@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ExceptionMessages.DOCTOR_WITH_EMAIL_DOESNOT_EXIST;
 import static com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ExceptionMessages.PATIENT_WITH_ID_DOESNOT_EXIST;
@@ -82,8 +83,13 @@ public class AppointmentServiceImplementation implements AppointmentService{
     }
 
     @Override
-    public List<LocalTime> getDoctorTimeSlots(String doctorName) {
-        DoctorRegistry doctorRegistry = doctorRegistryRepository.findByEmail(doctorName);
-        return null;
+    public List<LocalTime> getDoctorTimeSlots(String doctorName, String date) {
+        DoctorRegistry doctorRegistry = doctorRegistryRepository.findByDoctorEmail(doctorName);
+
+        Map<String, List<LocalTime>> map = doctorRegistry.getThirtyMinutesInterval();
+        List<LocalTime> timeSlots  = map.get(date);
+
+        log.info("Timeslots ---> {}", timeSlots);
+        return timeSlots;
     }
 }

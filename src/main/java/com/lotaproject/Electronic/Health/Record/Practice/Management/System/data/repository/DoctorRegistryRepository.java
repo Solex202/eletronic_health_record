@@ -4,5 +4,5 @@ import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface DoctorRegistryRepository extends MongoRepository<DoctorRegistry, String> {
-    DoctorRegistry findByEmail(String doctorName);
+    DoctorRegistry findByDoctorEmail(String doctorName);
 }
