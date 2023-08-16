@@ -95,21 +95,26 @@ public class PatientServiceImplementation implements PatientService{
         patient.setModifiedDate(LocalDateTime.now());
 
         var savedPatient = patientRepository.save(patient);
+        String token = sendMailAndConfirmationToken(request, builder, savedPatient);
+
+        return ApiResponse.builder().message("Registration Successfully").token(token).data(savedPatient).build();
+
+    }
+
+    private String sendMailAndConfirmationToken(RegisterPatientRequest request, StringBuilder builder, Patient savedPatient) throws IOException, TemplateException {
         String token = UUID.randomUUID().toString();
         ConfirmationToken confirmationToken = new ConfirmationToken(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(15), savedPatient);
         confirmationTokenService.saveConfirmationToken(confirmationToken);
         Map<String, Object> map = new HashMap<>();
         map.put("name", request.getFirstName() + " "+ request.getLastName());
         map.put("token", token);
-//        configuration.getTemplate("patientservice.ftlh").process(map, writer);
         builder.append(FreeMarkerTemplateUtils.processTemplateIntoString(configuration.getTemplate("patientservice.ftlh"), map)
         );
 
         emailSender.send(request.getEmail(), builder.toString());
-
-        return ApiResponse.builder().message("Registration Successfully").token(token).data(savedPatient).build();
-
+        return token;
     }
+
     private void registerPatientValidation(RegisterPatientRequest request) {
         StringBuilder builder = new StringBuilder();
         if(!emailIsValid(request.getEmail())) builder.append(EMAIL_IS_INVALID.getMessage()).append("\n");

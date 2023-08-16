@@ -82,7 +82,6 @@ public class DoctorServiceImplementation implements DoctorService{
 
         return matcher.matches();
     }
-
     private boolean passwordIsValid(String password) {
         String regex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20}$";
         Pattern pattern  = Pattern.compile(regex);

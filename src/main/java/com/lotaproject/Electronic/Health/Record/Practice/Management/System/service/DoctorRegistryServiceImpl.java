@@ -72,8 +72,6 @@ public class DoctorRegistryServiceImpl implements DoctorRegistryService {
                 .thirtyMinutesIntervals(registry.getThirtyMinutesInterval())
                 .build();
 
-        log.info("RESPONSE ----> {}", response);
-
         return ApiResponse.builder().data(response).message("Schedule created successfully").build();
 
         //TODO, question, what makes a schedule unique?
