@@ -1,5 +1,6 @@
 package com.lotaproject.Electronic.Health.Record.Practice.Management.System.service;
 
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.AppointmentFormDto;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.AppointmentForm;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.DoctorRegistry;
@@ -10,6 +11,7 @@ import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.PatientRepository;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.PatientDoesNotexistException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,7 @@ import static com.lotaproject.Electronic.Health.Record.Practice.Management.Syste
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class AppointmentServiceImplementation implements AppointmentService{
     @Autowired
     private AppointmentRepository appointmentRepository;
@@ -36,11 +39,11 @@ public class AppointmentServiceImplementation implements AppointmentService{
     }
 
     @Override
-    public ApiResponse<?> bookAppointment(String patientId, AppointmentForm form) {
+    public ApiResponse<?> bookAppointment(String patientId, AppointmentFormDto form) {
          var patient = getPatient(patientId);
 
          var appointForm = new AppointmentForm();
-         appointForm.setTimeSlot(form.getTimeSlot());
+         appointForm.setTimeSlot(form.getAppointmentTime());
          appointForm.setAppointmentDate(form.getAppointmentDate());
          appointForm.setPatientID(patient.getPatientId());
          appointForm.setDoctorName(form.getDoctorName());
@@ -65,6 +68,8 @@ public class AppointmentServiceImplementation implements AppointmentService{
 
             }
         }
+
+        log.info("DOCTORS ---->{}",doctorList);
 
         return doctorList;
 
