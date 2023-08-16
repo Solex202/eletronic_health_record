@@ -2,13 +2,12 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.serv
 
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.AppointmentFormDto;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.AppointmentForm;
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.DoctorRegistry;
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Patient;
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.ScheduleRegistry;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.*;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.AppointmentRepository;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.DoctorRegistryRepository;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.DoctorRepository;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.PatientRepository;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.DoctorException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.PatientDoesNotexistException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ExceptionMessages.DOCTOR_WITH_EMAIL_DOESNOT_EXIST;
 import static com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ExceptionMessages.PATIENT_WITH_ID_DOESNOT_EXIST;
 
 @Service
@@ -30,12 +30,16 @@ public class AppointmentServiceImplementation implements AppointmentService{
     private AppointmentRepository appointmentRepository;
     @Autowired
     private PatientRepository patientRepository;
-
+    @Autowired
+    private DoctorRepository doctorRepository;
     @Autowired
     private DoctorRegistryRepository doctorRegistryRepository;
 
     private Patient getPatient(String id){
         return patientRepository.findById(id).orElseThrow(()-> new PatientDoesNotexistException(String.format(PATIENT_WITH_ID_DOESNOT_EXIST.getMessage(), id)));
+    }
+    private Doctor getDoctor(String email){
+        return doctorRepository.findByEmail(email).orElseThrow(()-> new DoctorException(String.format(DOCTOR_WITH_EMAIL_DOESNOT_EXIST.getMessage(), email)));
     }
 
     @Override
@@ -60,17 +64,16 @@ public class AppointmentServiceImplementation implements AppointmentService{
          List<String> doctorList = new ArrayList<>();
         for (DoctorRegistry doctorRegistry: doctorRegistries) {
             List<ScheduleRegistry> scheduleRegistries = doctorRegistry.getScheduleRegistries();
-            for (ScheduleRegistry scheduleRegistry: scheduleRegistries) {
+            for (ScheduleRegistry scheduleRegistry : scheduleRegistries) {
                 if(scheduleRegistry.getFrom().toLocalDate().equals(date)){
+                    Doctor doctor1 = getDoctor(doctorRegistry.getDoctorEmail());
                     String doctor = doctorRegistry.getDoctorEmail();
                     doctorList.add(doctor);
                 }
-
             }
         }
 
         log.info("DOCTORS ---->{}",doctorList);
-
         return doctorList;
 
     }

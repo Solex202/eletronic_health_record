@@ -11,7 +11,9 @@ public enum ExceptionMessages {
 
     INCORRECT_EMAIL_OR_PASSWORD("Email or password is incorrect"),
 
-    UPDATE_MESSAGE("Updated Successful");
+    UPDATE_MESSAGE("Updated Successful"),
+
+    DOCTOR_WITH_EMAIL_DOESNOT_EXIST("Doctor with email %s does not exist");
 
 //    INCORRECT_PASSWORD("Password is incorrect");
     private final String message;
