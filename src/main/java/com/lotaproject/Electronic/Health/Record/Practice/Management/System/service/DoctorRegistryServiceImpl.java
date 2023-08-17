@@ -40,8 +40,6 @@ public class DoctorRegistryServiceImpl implements DoctorRegistryService {
 
             List<BreakPeriod> breakPeriods = scheduleRegistry.getBreakPeriod();
 
-            log.info("BREAK PERIODS {}",breakPeriods);
-
             while (from.isBefore(to) ) {
 
                 if (!isWithinBreakPeriods(from, breakPeriods)) {

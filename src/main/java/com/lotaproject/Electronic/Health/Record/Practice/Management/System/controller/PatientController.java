@@ -32,11 +32,8 @@ public class PatientController {
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (ElectronicHealthException | TemplateException | IOException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-
-
         }
     }
-
     @GetMapping("/find-by-email/{email}")
     public ResponseEntity<?> findByEmail(@PathVariable String email){
         try{
@@ -55,7 +52,6 @@ public class PatientController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
-
     @PatchMapping("update/{id}")
     public ResponseEntity<?> update(@PathVariable String id, @RequestBody UpdatePatientDetailRequest request){
         try{
