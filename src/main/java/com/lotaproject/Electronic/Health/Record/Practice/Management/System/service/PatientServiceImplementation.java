@@ -161,6 +161,11 @@ public class PatientServiceImplementation implements PatientService{
                 .build();
     }
 
+    @Override
+    public List<Patient> findAllPatients() {
+        return patientRepository.findAll();
+    }
+
     private void updateEmailValidation(String email, Patient patient) {
         if(!emailIsValid(email)) throw new CannotRegisterPatientException(EMAIL_IS_INVALID.getMessage());
 

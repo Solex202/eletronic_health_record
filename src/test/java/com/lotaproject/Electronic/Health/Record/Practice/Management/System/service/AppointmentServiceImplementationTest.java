@@ -1,6 +1,6 @@
 package com.lotaproject.Electronic.Health.Record.Practice.Management.System.service;
 
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.AppointmentFormDto;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.BookAppointmentFormDto;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ class AppointmentServiceImplementationTest {
 
     @Test
     void testThatCanBookAppointment(){
-        AppointmentFormDto form = new AppointmentFormDto();
+        BookAppointmentFormDto form = new BookAppointmentFormDto();
         form.setAppointmentDate(LocalDate.of(2023, 7,21));
         form.setDoctorName("Doctor jesus");
         form.setAppointmentTime(LocalTime.of(9, 0));

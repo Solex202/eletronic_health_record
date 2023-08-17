@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Data
-public class AppointmentFormDto {
+public class BookAppointmentFormDto {
 
     private LocalTime appointmentTime;
     private String doctorName;

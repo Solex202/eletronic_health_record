@@ -184,6 +184,12 @@ class PatientServiceImplementationTest {
         );
     }
 
+    @Test
+    void findAllPatients(){
+        List<Patient> all = patientService.findAllPatients();
+        assertThat(all.size(), is(13));
+    }
+
 
     @AfterEach
     void tearDown() {

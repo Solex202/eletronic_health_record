@@ -10,6 +10,7 @@ import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.
 import freemarker.template.TemplateException;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface PatientService {
     ApiResponse<?> registerPatient(RegisterPatientRequest request) throws IOException, TemplateException;
@@ -22,4 +23,5 @@ public interface PatientService {
 
     PaginatedPatientResponse findByName(int pageNumber, int pageSize,String name);
 
+    List<Patient> findAllPatients();
 }

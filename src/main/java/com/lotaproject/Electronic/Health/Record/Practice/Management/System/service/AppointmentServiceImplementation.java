@@ -1,6 +1,6 @@
 package com.lotaproject.Electronic.Health.Record.Practice.Management.System.service;
 
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.AppointmentFormDto;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.BookAppointmentFormDto;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.*;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.AppointmentRepository;
@@ -45,7 +45,7 @@ public class AppointmentServiceImplementation implements AppointmentService{
     }
 
     @Override
-    public ApiResponse<?> bookAppointment(String patientId, AppointmentFormDto form) {
+    public ApiResponse<?> bookAppointment(String patientId, BookAppointmentFormDto form) {
          var patient = getPatient(patientId);
 
          var appointForm = new AppointmentForm();
@@ -87,9 +87,7 @@ public class AppointmentServiceImplementation implements AppointmentService{
         DoctorRegistry doctorRegistry = doctorRegistryRepository.findByDoctorEmail(doctorName);
 
         Map<String, List<LocalTime>> map = doctorRegistry.getThirtyMinutesInterval();
-        List<LocalTime> timeSlots  = map.get(date);
 
-        log.info("Timeslots ---> {}", timeSlots);
-        return timeSlots;
+        return map.get(date);
     }
 }
