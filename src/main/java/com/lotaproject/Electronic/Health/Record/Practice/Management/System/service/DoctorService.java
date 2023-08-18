@@ -5,7 +5,10 @@ import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.
 import freemarker.template.TemplateException;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface DoctorService {
     ApiResponse<?> saveDoctor(Doctor doctor) throws IOException, TemplateException;
+
+    List<Doctor> findAllDoctors();
 }

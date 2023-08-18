@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -32,6 +33,11 @@ class DoctorServiceImplementationTest {
         assertAll(
                 ()-> assertThat(response.getMessage(), is("Successful"))
         );
+    }
+
+    @Test
+    void findAll(){
+        List<Doctor> doctors = doctorService.findAllDoctors();
     }
 
     @AfterEach

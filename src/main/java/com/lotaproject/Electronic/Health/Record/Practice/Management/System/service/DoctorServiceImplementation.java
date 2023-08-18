@@ -22,6 +22,7 @@ import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -72,6 +73,11 @@ public class DoctorServiceImplementation implements DoctorService{
         emailSender.send(doctor.getEmail(), builder.toString());
 
         return ApiResponse.builder().message("Successful").data(newDoctor).build();
+    }
+
+    @Override
+    public List<Doctor> findAllDoctors() {
+        return doctorRepository.findAll();
     }
 
     private boolean emailIsValid(String email) {

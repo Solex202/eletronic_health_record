@@ -9,13 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("")
+@RequestMapping("/appointment")
 public class AppointmentController {
 
     @Autowired
     private AppointmentService appointmentService;
 
-    @PostMapping("book-appointment/{patientId}")
+    @PostMapping("book/{patientId}")
     public ResponseEntity<?> bookAppointment(@PathVariable String patientId,  @RequestBody BookAppointmentFormDto bookAppointmentFormDto) {
         try {
             ApiResponse<?> response = appointmentService.bookAppointment(patientId, bookAppointmentFormDto);
