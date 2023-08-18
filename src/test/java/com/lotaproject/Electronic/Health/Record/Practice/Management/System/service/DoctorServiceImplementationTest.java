@@ -38,6 +38,7 @@ class DoctorServiceImplementationTest {
     @Test
     void findAll(){
         List<Doctor> doctors = doctorService.findAllDoctors();
+        assertThat(doctors.size(), is(5));
     }
 
     @AfterEach
