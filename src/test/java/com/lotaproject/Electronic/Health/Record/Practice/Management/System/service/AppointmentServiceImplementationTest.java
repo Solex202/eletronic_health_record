@@ -42,4 +42,16 @@ class AppointmentServiceImplementationTest {
     void testThatCanGetDoctorAvailableTimes(){
         List<LocalTime> res = appointmentService.getDoctorTimeSlots("ademiju@gmail.com", "2023-09-25");
     }
+
+    @Test
+    void rescheduleAppointment(){
+        BookAppointmentFormDto form = new BookAppointmentFormDto();
+        form.setAppointmentDate(LocalDate.of(2023, 7,21));
+        form.setDoctorName("Doctor jesus");
+        form.setAppointmentTime(LocalTime.of(9, 0));
+
+        ApiResponse<?> response = appointmentService.bookAppointment("64a332cc0003081a15b23893", form);
+
+        assertThat(response.getMessage(), is("Appointment Booked successfully"));
+    }
 }

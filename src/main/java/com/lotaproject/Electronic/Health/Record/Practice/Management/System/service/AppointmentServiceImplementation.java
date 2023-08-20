@@ -55,6 +55,7 @@ public class AppointmentServiceImplementation implements AppointmentService{
          appointForm.setDoctorName(form.getDoctorName());
          appointForm.setBookedTime(LocalDateTime.now());
          appointForm.setPatientName(patient.getFirstName().concat(" ").concat(patient.getLastName()));
+         appointForm.setAppointmentStatus(AppointmentStatus.BOOKED);
 
          AppointmentForm newForm = appointmentRepository.save(appointForm);
 
