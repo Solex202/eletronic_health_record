@@ -9,11 +9,11 @@ import java.util.List;
 
 public interface AppointmentService {
 
-    ApiResponse<?> bookAppointment(String id, BookAppointmentFormDto form);
+    ApiResponse<?> bookAppointment(String patientId, BookAppointmentFormDto form);
 
     List<String> getAvailableDoctors(LocalDate date);
 
     List<LocalTime> getDoctorTimeSlots(String doctorName, String date);
 
-    ApiResponse<?> rescheduleAppointment( String appointmentId, BookAppointmentFormDto form);
+    ApiResponse<?> rescheduleAppointment(String patientId, String appointmentId, BookAppointmentFormDto form);
 }

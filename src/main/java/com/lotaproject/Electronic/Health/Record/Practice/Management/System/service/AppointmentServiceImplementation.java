@@ -54,13 +54,14 @@ public class AppointmentServiceImplementation implements AppointmentService{
          var patient = getPatient(patientId);
 
          var appointForm = new AppointmentForm();
-         appointForm.setAppointmentTime(form.getAppointmentTime());
-         appointForm.setAppointmentDate(form.getAppointmentDate());
+         appointForm.setAppointmentTime(form.getAppointmentTime().toString());
+         appointForm.setAppointmentDate(form.getAppointmentDate().toString());
          appointForm.setPatientID(patient.getPatientId());
          appointForm.setDoctorName(form.getDoctorName());
          appointForm.setBookedTime(LocalDateTime.now());
          appointForm.setPatientName(patient.getFirstName().concat(" ").concat(patient.getLastName()));
          appointForm.setAppointmentStatus(AppointmentStatus.BOOKED);
+         appointForm.setDuration("");
 
          AppointmentForm newForm = appointmentRepository.save(appointForm);
 
@@ -97,18 +98,24 @@ public class AppointmentServiceImplementation implements AppointmentService{
     }
 
     @Override
-    public ApiResponse<?> rescheduleAppointment(String appointmentId, BookAppointmentFormDto form) {
+    public ApiResponse<?> rescheduleAppointment(String patientId, String appointmentId, BookAppointmentFormDto form) {
 
         AppointmentForm appointmentForm = getAppointment(appointmentId);
+        Patient patient =getPatient(patientId);
         if(appointmentForm.getAppointmentStatus().equals(AppointmentStatus.COMPLETED)){
             throw new AppointmentException("Appointment already completed, cannot be rescheduled");
         }
 
-        appointmentForm.setAppointmentDate(form.getAppointmentDate());
-        appointmentForm.setAppointmentTime(form.getAppointmentTime());
-//        appointmentForm.setBookedTime(LocalDateTime.now());
+        appointmentForm.setAppointmentDate(form.getAppointmentDate().toString());
+        appointmentForm.setAppointmentTime(form.getAppointmentTime().toString());
         appointmentForm.setModifiedDate(LocalDateTime.now());
+        appointmentForm.setPatientName(patient.getFirstName() + " " + patient.getLastName());
+        appointmentForm.setPatientID(patient.getPatientId());
+        appointmentForm.setAppointmentStatus(AppointmentStatus.BOOKED);
+        appointmentForm.setDuration("");
 
-        return null;
+        AppointmentForm newForm = appointmentRepository.save(appointmentForm);
+
+        return  ApiResponse.builder().message("Appointment rescheduled successfully").data(newForm).build();
     }
 }

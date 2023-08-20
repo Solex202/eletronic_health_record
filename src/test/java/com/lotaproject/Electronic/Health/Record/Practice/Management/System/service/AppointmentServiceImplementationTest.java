@@ -21,11 +21,11 @@ class AppointmentServiceImplementationTest {
     @Test
     void testThatCanBookAppointment(){
         BookAppointmentFormDto form = new BookAppointmentFormDto();
-        form.setAppointmentDate(LocalDate.of(2023, 7,21));
-        form.setDoctorName("Doctor jesus");
-        form.setAppointmentTime(LocalTime.of(9, 0));
+        form.setAppointmentDate(LocalDate.of(2023, 9,20));
+        form.setDoctorName("miju ade");
+        form.setAppointmentTime(LocalTime.of(4  , 0));
 
-        ApiResponse<?> response = appointmentService.bookAppointment("64a332cc0003081a15b23893", form);
+        ApiResponse<?> response = appointmentService.bookAppointment("64c521e4b693b9565c6a7f3f", form);
 
         assertThat(response.getMessage(), is("Appointment Booked successfully"));
     }
@@ -44,11 +44,11 @@ class AppointmentServiceImplementationTest {
     @Test
     void rescheduleAppointment(){
         BookAppointmentFormDto form = new BookAppointmentFormDto();
-        form.setAppointmentDate(LocalDate.of(2023, 7,21));
+        form.setAppointmentDate(LocalDate.of(2023, 7,25));
         form.setDoctorName("Doctor jesus");
-        form.setAppointmentTime(LocalTime.of(9, 0));
+        form.setAppointmentTime(LocalTime.of(11, 30));
 
-        ApiResponse<?> response = appointmentService.rescheduleAppointment("64e2182c6eb62a3cba1c9fb3", form);
+        ApiResponse<?> response = appointmentService.rescheduleAppointment("64a332cc0003081a15b23893","64e2182c6eb62a3cba1c9fb3", form);
 
         assertThat(response.getMessage(), is("Appointment rescheduled successfully"));
     }

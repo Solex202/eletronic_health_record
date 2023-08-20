@@ -18,8 +18,8 @@ public class AppointmentForm {
 
     @Id
     private String id;
-    private LocalDate appointmentDate;
-    private LocalTime appointmentTime;
+    private String appointmentDate;
+    private String appointmentTime;
     private String patientID;
     private String patientName;
     private String doctorName;
