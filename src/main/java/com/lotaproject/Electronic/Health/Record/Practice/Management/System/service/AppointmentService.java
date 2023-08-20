@@ -14,4 +14,6 @@ public interface AppointmentService {
     List<String> getAvailableDoctors(LocalDate date);
 
     List<LocalTime> getDoctorTimeSlots(String doctorName, String date);
+
+    ApiResponse<?> rescheduleAppointment(String patientId, String appointmentId, BookAppointmentFormDto form);
 }

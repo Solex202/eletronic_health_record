@@ -44,6 +44,8 @@ public class AppointmentServiceImplementation implements AppointmentService{
         return doctorRepository.findByEmail(email).orElseThrow(()-> new DoctorException(String.format(DOCTOR_WITH_EMAIL_DOESNOT_EXIST.getMessage(), email)));
     }
 
+
+
     @Override
     public ApiResponse<?> bookAppointment(String patientId, BookAppointmentFormDto form) {
          var patient = getPatient(patientId);
@@ -90,5 +92,10 @@ public class AppointmentServiceImplementation implements AppointmentService{
         Map<String, List<LocalTime>> map = doctorRegistry.getThirtyMinutesInterval();
 
         return map.get(date);
+    }
+
+    @Override
+    public ApiResponse<?> rescheduleAppointment(String patientId, String appointmentId, BookAppointmentFormDto form) {
+        return null;
     }
 }

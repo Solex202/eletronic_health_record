@@ -15,10 +15,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 @SpringBootTest
 class AppointmentServiceImplementationTest {
-
     @Autowired
     private  AppointmentService appointmentService;
-
 
     @Test
     void testThatCanBookAppointment(){
@@ -50,8 +48,8 @@ class AppointmentServiceImplementationTest {
         form.setDoctorName("Doctor jesus");
         form.setAppointmentTime(LocalTime.of(9, 0));
 
-        ApiResponse<?> response = appointmentService.bookAppointment("64a332cc0003081a15b23893", form);
+        ApiResponse<?> response = appointmentService.rescheduleAppointment("64a332cc0003081a15b23893","64e2182c6eb62a3cba1c9fb3", form);
 
-        assertThat(response.getMessage(), is("Appointment Booked successfully"));
+        assertThat(response.getMessage(), is("Appointment rescheduled successfully"));
     }
 }
