@@ -7,6 +7,7 @@ import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.DoctorRegistryRepository;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.DoctorRepository;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.PatientRepository;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.AppointmentException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.DoctorException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.PatientDoesNotexistException;
 import lombok.AllArgsConstructor;
@@ -44,14 +45,16 @@ public class AppointmentServiceImplementation implements AppointmentService{
         return doctorRepository.findByEmail(email).orElseThrow(()-> new DoctorException(String.format(DOCTOR_WITH_EMAIL_DOESNOT_EXIST.getMessage(), email)));
     }
 
-
+    private AppointmentForm getAppointment(String id){
+        return appointmentRepository.findById(id).orElseThrow(()-> new AppointmentException("Appointment doesn't exist"));
+    }
 
     @Override
     public ApiResponse<?> bookAppointment(String patientId, BookAppointmentFormDto form) {
          var patient = getPatient(patientId);
 
          var appointForm = new AppointmentForm();
-         appointForm.setTimeSlot(form.getAppointmentTime());
+         appointForm.setAppointmentTime(form.getAppointmentTime());
          appointForm.setAppointmentDate(form.getAppointmentDate());
          appointForm.setPatientID(patient.getPatientId());
          appointForm.setDoctorName(form.getDoctorName());
@@ -80,13 +83,12 @@ public class AppointmentServiceImplementation implements AppointmentService{
             }
         }
 
-        log.info("DOCTORS ---->{}",doctorList);
         return doctorList;
 
     }
 
     @Override
-    public List<LocalTime> getDoctorTimeSlots(String doctorName, String date) {
+    public List<LocalTime> getDoctorTimeSlots( String doctorName, String date) {
         DoctorRegistry doctorRegistry = doctorRegistryRepository.findByDoctorEmail(doctorName);
 
         Map<String, List<LocalTime>> map = doctorRegistry.getThirtyMinutesInterval();
@@ -95,7 +97,18 @@ public class AppointmentServiceImplementation implements AppointmentService{
     }
 
     @Override
-    public ApiResponse<?> rescheduleAppointment(String patientId, String appointmentId, BookAppointmentFormDto form) {
+    public ApiResponse<?> rescheduleAppointment(String appointmentId, BookAppointmentFormDto form) {
+
+        AppointmentForm appointmentForm = getAppointment(appointmentId);
+        if(appointmentForm.getAppointmentStatus().equals(AppointmentStatus.COMPLETED)){
+            throw new AppointmentException("Appointment already completed, cannot be rescheduled");
+        }
+
+        appointmentForm.setAppointmentDate(form.getAppointmentDate());
+        appointmentForm.setAppointmentTime(form.getAppointmentTime());
+//        appointmentForm.setBookedTime(LocalDateTime.now());
+        appointmentForm.setModifiedDate(LocalDateTime.now());
+
         return null;
     }
 }
