@@ -77,6 +77,10 @@ public class AppointmentServiceImplementation implements AppointmentService{
         var builder = new StringBuilder();
         Map<String, Object> map = new HashMap<>();
         map.put("name", patient.getFirstName() + " "+ patient.getLastName());
+        map.put("date", newForm.getAppointmentDate());
+        map.put("time", newForm.getAppointmentTime());
+        map.put("duration", newForm.getDuration());
+        map.put("doctor", newForm.getDoctorName());
         builder.append(FreeMarkerTemplateUtils.processTemplateIntoString(configuration.getTemplate("appointment.ftlh"), map)
         );
 

@@ -2,10 +2,12 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.serv
 
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.BookAppointmentFormDto;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
+import freemarker.template.TemplateException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -19,13 +21,13 @@ class AppointmentServiceImplementationTest {
     private  AppointmentService appointmentService;
 
     @Test
-    void testThatCanBookAppointment(){
+    void testThatCanBookAppointment() throws TemplateException, IOException {
         BookAppointmentFormDto form = new BookAppointmentFormDto();
         form.setAppointmentDate(LocalDate.of(2023, 9,20));
         form.setDoctorName("miju ade");
         form.setAppointmentTime(LocalTime.of(4  , 0));
 
-        ApiResponse<?> response = appointmentService.bookAppointment("64c521e4b693b9565c6a7f3f", form);
+        ApiResponse<?> response = appointmentService.bookAppointment("64c24f02b938fe00ef5177ae", form);
 
         assertThat(response.getMessage(), is("Appointment Booked successfully"));
     }

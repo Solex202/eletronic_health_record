@@ -8,10 +8,14 @@
 </head>
 <body>
     <div style="margin-top: 10px">Greetings, ${name}</div>
-    <div>Good day <b>${name}</b></div>
-
     <br/>
     <div>We are pleased to inform you that your appointment has successfully been booked</div>
-    <div> Have a nice day..!</div>
+    <div>Below are the details</div>
+    <div>Date: ${date}</div>
+    <div>Time: ${time}</div>
+    <div>Duration: ${duration}</div>
+    <div>Doctor:  ${doctor}</div>
+    <br/>
+    <div>We are looking forward to seeing you at Lota Medical Center</div>1
 </body>
 </html>
