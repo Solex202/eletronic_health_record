@@ -86,6 +86,19 @@ public class AppointmentServiceImplementation implements AppointmentService{
 
         emailSender.send(patient.getEmail(), builder.toString());
 
+        var builder2 = new StringBuilder();
+        Map<String, Object> map2 = new HashMap<>();
+        map2.put("patientName", patient.getFirstName() + " "+ patient.getLastName());
+        map2.put("date", newForm.getAppointmentDate());
+        map2.put("time", newForm.getAppointmentTime());
+        map2.put("duration", newForm.getDuration());
+        map2.put("patientId", newForm.getPatientID());
+        builder2.append(FreeMarkerTemplateUtils.processTemplateIntoString(configuration.getTemplate("doctor.ftlh"), map2)
+        );
+
+        emailSender.send(patient.getEmail(), builder2.toString());
+
+
         //TODO: send mail to the patient and the doctor once the booking is successful;
         return  ApiResponse.builder().message("Appointment Booked successfully").data(newForm).build();
 
@@ -109,7 +122,6 @@ public class AppointmentServiceImplementation implements AppointmentService{
         }
 
         return doctorList;
-
     }
 
     @Override

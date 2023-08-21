@@ -9,13 +9,14 @@
 <body>
     <div style="margin-top: 10px">Greetings, ${name}</div>
     <br/>
-    <div>We are pleased to inform you that your appointment has successfully been booked</div>
+    <div>You have a new appointment on your desk</div>
     <div>Below are the details</div>
     <div>Date: ${date}</div>
     <div>Time: ${time}</div>
     <div>Duration: ${duration}</div>
-    <div>Doctor:  ${doctor}</div>
+    <div>Patient name:  ${patientName}</div>
+    <div>Patient Id:  ${patientId}</div>
     <br/>
-    <div>We are looking forward to seeing you at Lota Medical Center</div>
+    <div>Thank you once again for your wonderful service to our patients</div>
 </body>
 </html>
