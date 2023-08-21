@@ -7,21 +7,23 @@ import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.DoctorRegistryRepository;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.DoctorRepository;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.PatientRepository;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.email.EmailSender;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.AppointmentException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.DoctorException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.PatientDoesNotexistException;
+import freemarker.template.Configuration;
+import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ExceptionMessages.DOCTOR_WITH_EMAIL_DOESNOT_EXIST;
 import static com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ExceptionMessages.PATIENT_WITH_ID_DOESNOT_EXIST;
@@ -39,6 +41,12 @@ public class AppointmentServiceImplementation implements AppointmentService{
     @Autowired
     private DoctorRegistryRepository doctorRegistryRepository;
 
+    @Autowired
+    private EmailSender emailSender;
+
+    @Autowired
+    Configuration configuration;
+
     private Patient getPatient(String id){
         return patientRepository.findById(id).orElseThrow(()-> new PatientDoesNotexistException(String.format(PATIENT_WITH_ID_DOESNOT_EXIST.getMessage(), id)));
     }
@@ -51,7 +59,7 @@ public class AppointmentServiceImplementation implements AppointmentService{
     }
 
     @Override
-    public ApiResponse<?> bookAppointment(String patientId, BookAppointmentFormDto form) {
+    public ApiResponse<?> bookAppointment(String patientId, BookAppointmentFormDto form) throws IOException, TemplateException {
          var patient = getPatient(patientId);
 
          var appointForm = new AppointmentForm();
@@ -66,7 +74,13 @@ public class AppointmentServiceImplementation implements AppointmentService{
 
          AppointmentForm newForm = appointmentRepository.save(appointForm);
 
+        var builder = new StringBuilder();
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", patient.getFirstName() + " "+ patient.getLastName());
+        builder.append(FreeMarkerTemplateUtils.processTemplateIntoString(configuration.getTemplate("appointment.ftlh"), map)
+        );
 
+        emailSender.send(patient.getEmail(), builder.toString());
 
         //TODO: send mail to the patient and the doctor once the booking is successful;
         return  ApiResponse.builder().message("Appointment Booked successfully").data(newForm).build();

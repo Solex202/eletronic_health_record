@@ -2,14 +2,16 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.serv
 
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.BookAppointmentFormDto;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
+import freemarker.template.TemplateException;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
 public interface AppointmentService {
 
-    ApiResponse<?> bookAppointment(String patientId, BookAppointmentFormDto form);
+    ApiResponse<?> bookAppointment(String patientId, BookAppointmentFormDto form) throws IOException, TemplateException;
 
     List<String> getAvailableDoctors(LocalDate date);
 
