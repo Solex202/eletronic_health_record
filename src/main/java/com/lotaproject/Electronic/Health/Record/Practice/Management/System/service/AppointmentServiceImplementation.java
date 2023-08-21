@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -61,14 +62,19 @@ public class AppointmentServiceImplementation implements AppointmentService{
          appointForm.setBookedTime(LocalDateTime.now());
          appointForm.setPatientName(patient.getFirstName().concat(" ").concat(patient.getLastName()));
          appointForm.setAppointmentStatus(AppointmentStatus.BOOKED);
-         appointForm.setDuration("");
+         appointForm.setDuration("30 MINS");
 
          AppointmentForm newForm = appointmentRepository.save(appointForm);
 
+
+
+        //TODO: send mail to the patient and the doctor once the booking is successful;
         return  ApiResponse.builder().message("Appointment Booked successfully").data(newForm).build();
+
     }
 
     public List<String> getAvailableDoctors(LocalDate date){
+        Calendar calendar ;
          List<DoctorRegistry> doctorRegistries = doctorRegistryRepository.findAll();
          List<String> doctorList = new ArrayList<>();
         for (DoctorRegistry doctorRegistry: doctorRegistries) {
@@ -112,10 +118,12 @@ public class AppointmentServiceImplementation implements AppointmentService{
         appointmentForm.setPatientName(patient.getFirstName() + " " + patient.getLastName());
         appointmentForm.setPatientID(patient.getPatientId());
         appointmentForm.setAppointmentStatus(AppointmentStatus.BOOKED);
-        appointmentForm.setDuration("");
+        appointmentForm.setDuration("30 MINS");
 
         AppointmentForm newForm = appointmentRepository.save(appointmentForm);
 
         return  ApiResponse.builder().message("Appointment rescheduled successfully").data(newForm).build();
+
+        //TODO: send mail to the patient and the doctor once the appointment is rescheduled successfully;
     }
 }
