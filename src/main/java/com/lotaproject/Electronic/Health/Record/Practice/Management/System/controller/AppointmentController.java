@@ -43,7 +43,7 @@ public class AppointmentController {
     }
 
     @GetMapping("get-times")
-    public ResponseEntity<?> getTimeSlots(@RequestParam String doctorName, @RequestParam String date){
+    public ResponseEntity<?> getTimeSlots(@RequestParam(value = "doctorName") String doctorName, @RequestParam(value = "date") String date){
         try {
             List<LocalTime> timeList = appointmentService.getDoctorTimeSlots(doctorName, date);
             return new ResponseEntity<>(timeList, HttpStatus.OK);
