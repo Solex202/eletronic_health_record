@@ -2,11 +2,15 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.cont
 
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.BookAppointmentFormDto;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Doctor;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.service.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/appointment")
@@ -25,5 +29,15 @@ public class AppointmentController {
             throw new RuntimeException(e);
         }
 
+    }
+
+    @GetMapping("get-available-doctors")
+    public ResponseEntity<?> getAvailableDoctors(@PathVariable LocalDate localDate){
+        try {
+            List<String> doctors = appointmentService.getAvailableDoctors(localDate);
+            return new ResponseEntity<>(doctors, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
