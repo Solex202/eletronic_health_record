@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -36,6 +37,16 @@ public class AppointmentController {
         try {
             List<String> doctors = appointmentService.getAvailableDoctors(localDate);
             return new ResponseEntity<>(doctors, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @GetMapping("get-times")
+    public ResponseEntity<?> getTimeSlots(@RequestParam String doctorName, @RequestParam String date){
+        try {
+            List<LocalTime> timeList = appointmentService.getDoctorTimeSlots(doctorName, date);
+            return new ResponseEntity<>(timeList, HttpStatus.OK);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
