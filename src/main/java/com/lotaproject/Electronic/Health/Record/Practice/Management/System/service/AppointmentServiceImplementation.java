@@ -74,17 +74,7 @@ public class AppointmentServiceImplementation implements AppointmentService{
 
          AppointmentForm newForm = appointmentRepository.save(appointForm);
 
-        var builder = new StringBuilder();
-        Map<String, Object> map = new HashMap<>();
-        map.put("name", patient.getFirstName() + " "+ patient.getLastName());
-        map.put("date", newForm.getAppointmentDate());
-        map.put("time", newForm.getAppointmentTime());
-        map.put("duration", newForm.getDuration());
-        map.put("doctor", newForm.getDoctorName());
-        builder.append(FreeMarkerTemplateUtils.processTemplateIntoString(configuration.getTemplate("appointment.ftlh"), map)
-        );
-
-        emailSender.send(patient.getEmail(), builder.toString());
+        sendEmailToPatient(patient, newForm);
 
         var builder2 = new StringBuilder();
         Map<String, Object> map2 = new HashMap<>();
@@ -98,10 +88,22 @@ public class AppointmentServiceImplementation implements AppointmentService{
 
         emailSender.send(patient.getEmail(), builder2.toString());
 
-
-        //TODO: send mail to the patient and the doctor once the booking is successful;
         return  ApiResponse.builder().message("Appointment Booked successfully").data(newForm).build();
 
+    }
+
+    private void sendEmailToPatient(Patient patient, AppointmentForm newForm) throws IOException, TemplateException {
+        var builder = new StringBuilder();
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", patient.getFirstName() + " "+ patient.getLastName());
+        map.put("date", newForm.getAppointmentDate());
+        map.put("time", newForm.getAppointmentTime());
+        map.put("duration", newForm.getDuration());
+        map.put("doctor", newForm.getDoctorName());
+        builder.append(FreeMarkerTemplateUtils.processTemplateIntoString(configuration.getTemplate("appointment.ftlh"), map)
+        );
+
+        emailSender.send(patient.getEmail(), builder.toString());
     }
 
     public List<String> getAvailableDoctors(LocalDate date){
