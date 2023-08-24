@@ -11,11 +11,11 @@
     <br/>
     <div>You have a new appointment on your desk</div>
     <div>Below are the details</div>
-    <div>Date: ${date}</div>
-    <div>Time: ${time}</div>
-    <div>Duration: ${duration}</div>
-    <div>Patient name:  ${patientName}</div>
-    <div>Patient Id:  ${patientId}</div>
+    <div>Date: ${date} </div>
+    <div>Time: ${time} </div>
+    <div>Duration: ${duration} </div>
+    <div>Patient name:  ${patientName} </div>
+    <div>Patient Id:  ${patientId} </div>
     <br/>
     <div>Thank you once again for your wonderful service to our patients</div>
 </body>

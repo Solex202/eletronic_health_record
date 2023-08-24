@@ -109,6 +109,7 @@ public class AppointmentServiceImplementation implements AppointmentService{
     public List<String> getAvailableDoctors(LocalDate date){
         Calendar calendar ;
 
+
         List<DoctorRegistry> doctorRegistries = doctorRegistryRepository.findAll();
          List<String> doctorList = new ArrayList<>();
         for (DoctorRegistry doctorRegistry: doctorRegistries) {
