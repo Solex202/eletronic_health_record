@@ -160,4 +160,17 @@ public class AppointmentServiceImplementation implements AppointmentService{
 
         //TODO: send mail to the patient and the doctor once the appointment is rescheduled successfully;
     }
+
+    @Override
+    public AppointmentForm cancelAppointment(String appointmentId) {
+
+        AppointmentForm appointmentForm = getAppointment(appointmentId);
+        appointmentForm.setAppointmentStatus(AppointmentStatus.CANCELLED);
+        appointmentForm.setModifiedDate(LocalDateTime.now());
+
+        appointmentRepository.save(appointmentForm);
+
+
+        return appointmentForm;
+    }
 }

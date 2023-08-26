@@ -2,6 +2,8 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.serv
 
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.BookAppointmentFormDto;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.AppointmentForm;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.AppointmentStatus;
 import freemarker.template.TemplateException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +59,8 @@ class AppointmentServiceImplementationTest {
 
     @Test
     void cancelAppointment(){
+        AppointmentForm appointment = appointmentService.cancelAppointment("64e36dbc1fc83f4d67a77473");
 
+        assertThat(appointment.getAppointmentStatus(),is(AppointmentStatus.CANCELLED));
     }
 }

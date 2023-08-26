@@ -2,6 +2,7 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.serv
 
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.BookAppointmentFormDto;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.AppointmentForm;
 import freemarker.template.TemplateException;
 
 import java.io.IOException;
@@ -18,4 +19,6 @@ public interface AppointmentService {
     List<LocalTime> getDoctorTimeSlots(String doctorName, String date);
 
     ApiResponse<?> rescheduleAppointment(String patientId, String appointmentId, BookAppointmentFormDto form);
+
+    AppointmentForm cancelAppointment(String s);
 }
