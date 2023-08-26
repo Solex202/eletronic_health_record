@@ -18,7 +18,7 @@ public interface AppointmentService {
 
     List<LocalTime> getDoctorTimeSlots(String doctorName, String date);
 
-    ApiResponse<?> rescheduleAppointment(String patientId, String appointmentId, BookAppointmentFormDto form);
+    ApiResponse<?> rescheduleAppointment(String patientId, String appointmentId, BookAppointmentFormDto form) throws TemplateException, IOException;
 
     AppointmentForm cancelAppointment(String id);
 

@@ -107,9 +107,6 @@ public class AppointmentServiceImplementation implements AppointmentService{
     }
 
     public List<String> getAvailableDoctors(LocalDate date){
-        Calendar calendar ;
-
-
         List<DoctorRegistry> doctorRegistries = doctorRegistryRepository.findAll();
          List<String> doctorList = new ArrayList<>();
         for (DoctorRegistry doctorRegistry: doctorRegistries) {
@@ -138,7 +135,7 @@ public class AppointmentServiceImplementation implements AppointmentService{
     }
 
     @Override
-    public ApiResponse<?> rescheduleAppointment(String patientId, String appointmentId, BookAppointmentFormDto form) {
+    public ApiResponse<?> rescheduleAppointment(String patientId, String appointmentId, BookAppointmentFormDto form) throws TemplateException, IOException {
 
         AppointmentForm appointmentForm = getAppointment(appointmentId);
         Patient patient =getPatient(patientId);
@@ -155,6 +152,8 @@ public class AppointmentServiceImplementation implements AppointmentService{
         appointmentForm.setDuration("30 MINS");
 
         AppointmentForm newForm = appointmentRepository.save(appointmentForm);
+
+        sendEmailToPatient(patient, newForm);
 
         return  ApiResponse.builder().message("Appointment rescheduled successfully").data(newForm).build();
 
