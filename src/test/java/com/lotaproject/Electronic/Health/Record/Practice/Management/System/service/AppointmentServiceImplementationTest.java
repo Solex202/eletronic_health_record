@@ -64,4 +64,9 @@ class AppointmentServiceImplementationTest {
 
         assertThat(appointment.getAppointmentStatus(),is(AppointmentStatus.CANCELLED));
     }
+
+    @Test
+    void viewAppointment(){
+        AppointmentForm appointmentForm = appointmentService.viewAppointment("64e36dbc1fc83f4d67a77473");
+    }
 }

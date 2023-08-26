@@ -173,4 +173,9 @@ public class AppointmentServiceImplementation implements AppointmentService{
 
         return appointmentForm;
     }
+
+    @Override
+    public AppointmentForm viewAppointment(String id) {
+        return getAppointment(id);
+    }
 }

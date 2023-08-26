@@ -20,5 +20,7 @@ public interface AppointmentService {
 
     ApiResponse<?> rescheduleAppointment(String patientId, String appointmentId, BookAppointmentFormDto form);
 
-    AppointmentForm cancelAppointment(String s);
+    AppointmentForm cancelAppointment(String id);
+
+    AppointmentForm viewAppointment(String id);
 }
