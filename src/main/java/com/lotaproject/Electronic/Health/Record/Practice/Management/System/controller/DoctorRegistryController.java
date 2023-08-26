@@ -22,6 +22,7 @@ public class DoctorRegistryController {
     public ResponseEntity<?> createSchedule(@RequestBody DoctorRegistry doctorRegistry){
 
         try {
+
             ApiResponse<?> response = doctorRegistryService.createSchedule(doctorRegistry);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
 

@@ -54,4 +54,9 @@ class AppointmentServiceImplementationTest {
 
         assertThat(response.getMessage(), is("Appointment rescheduled successfully"));
     }
+
+    @Test
+    void cancelAppointment(){
+
+    }
 }
