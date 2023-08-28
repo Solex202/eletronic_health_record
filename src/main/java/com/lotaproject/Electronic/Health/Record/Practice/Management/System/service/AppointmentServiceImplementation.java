@@ -163,10 +163,13 @@ public class AppointmentServiceImplementation implements AppointmentService{
     @Override
     public AppointmentForm cancelAppointment(String appointmentId) {
 
-        AppointmentForm appointmentForm = getAppointment(appointmentId);
-        appointmentForm.setAppointmentStatus(AppointmentStatus.CANCELLED);
-        appointmentForm.setModifiedDate(LocalDateTime.now());
 
+        AppointmentForm appointmentForm = getAppointment(appointmentId);
+        if(appointmentForm.getAppointmentStatus() != AppointmentStatus.COMPLETED || appointmentForm.getAppointmentStatus() != AppointmentStatus.CANCELLED) {
+            appointmentForm.setAppointmentStatus(AppointmentStatus.CANCELLED);
+            appointmentForm.setModifiedDate(LocalDateTime.now());
+
+        }
         appointmentRepository.save(appointmentForm);
 
 
