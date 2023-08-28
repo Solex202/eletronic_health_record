@@ -23,4 +23,6 @@ public interface AppointmentService {
     AppointmentForm cancelAppointment(String id);
 
     AppointmentForm viewAppointment(String id);
+
+    List<AppointmentForm> findAll();
 }

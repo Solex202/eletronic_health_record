@@ -47,7 +47,7 @@ class AppointmentServiceImplementationTest {
     }
 
     @Test
-    void rescheduleAppointment(){
+    void rescheduleAppointment() throws TemplateException, IOException {
         BookAppointmentFormDto form = new BookAppointmentFormDto();
         form.setAppointmentDate(LocalDate.of(2023, 7,25));
         form.setDoctorName("Doctor jesus");
@@ -68,5 +68,10 @@ class AppointmentServiceImplementationTest {
     @Test
     void viewAppointment(){
         AppointmentForm appointmentForm = appointmentService.viewAppointment("64e36dbc1fc83f4d67a77473");
+    }
+
+    @Test
+    void findAll(){
+        List<AppointmentForm> appointmentFormList = appointmentService.findAll();
     }
 }

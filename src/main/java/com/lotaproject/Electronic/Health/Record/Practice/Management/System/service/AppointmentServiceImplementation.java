@@ -162,8 +162,6 @@ public class AppointmentServiceImplementation implements AppointmentService{
 
     @Override
     public AppointmentForm cancelAppointment(String appointmentId) {
-
-
         AppointmentForm appointmentForm = getAppointment(appointmentId);
         if(appointmentForm.getAppointmentStatus() != AppointmentStatus.COMPLETED || appointmentForm.getAppointmentStatus() != AppointmentStatus.CANCELLED) {
             appointmentForm.setAppointmentStatus(AppointmentStatus.CANCELLED);
@@ -172,12 +170,16 @@ public class AppointmentServiceImplementation implements AppointmentService{
         }
         appointmentRepository.save(appointmentForm);
 
-
         return appointmentForm;
     }
 
     @Override
     public AppointmentForm viewAppointment(String id) {
         return getAppointment(id);
+    }
+
+    @Override
+    public List<AppointmentForm> findAll() {
+        return null;
     }
 }
