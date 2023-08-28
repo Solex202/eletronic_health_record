@@ -180,6 +180,6 @@ public class AppointmentServiceImplementation implements AppointmentService{
 
     @Override
     public List<AppointmentForm> findAll() {
-        return null;
+        return appointmentRepository.findAll();
     }
 }

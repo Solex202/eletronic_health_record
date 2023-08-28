@@ -2,6 +2,7 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.cont
 
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.BookAppointmentFormDto;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.AppointmentForm;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Doctor;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.service.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,4 +52,16 @@ public class AppointmentController {
             throw new RuntimeException(e);
         }
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> findAll(){
+        try{
+            List<AppointmentForm> appointmentFormList = appointmentService.findAll();
+            return new ResponseEntity<>(appointmentFormList, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
 }
