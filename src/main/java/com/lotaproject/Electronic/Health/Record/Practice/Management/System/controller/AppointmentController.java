@@ -21,7 +21,7 @@ public class AppointmentController {
     @Autowired
     private AppointmentService appointmentService;
 
-    @PostMapping("book/{patientId}")
+    @PostMapping("/book/{patientId}")
     public ResponseEntity<?> bookAppointment(@PathVariable String patientId,  @RequestBody BookAppointmentFormDto bookAppointmentFormDto) {
         try {
             ApiResponse<?> response = appointmentService.bookAppointment(patientId, bookAppointmentFormDto);
@@ -33,7 +33,7 @@ public class AppointmentController {
 
     }
 
-    @GetMapping("get-available-doctors")
+    @GetMapping("/get-available-doctors")
     public ResponseEntity<?> getAvailableDoctors(@PathVariable LocalDate localDate){
         try {
             List<String> doctors = appointmentService.getAvailableDoctors(localDate);
@@ -43,7 +43,7 @@ public class AppointmentController {
         }
     }
 
-    @GetMapping("get-times")
+    @GetMapping("/get-times")
     public ResponseEntity<?> getTimeSlots(@RequestParam(value = "doctorName") String doctorName, @RequestParam(value = "date") String date){
         try {
             List<LocalTime> timeList = appointmentService.getDoctorTimeSlots(doctorName, date);
@@ -62,6 +62,16 @@ public class AppointmentController {
             throw new RuntimeException(e);
         }
 
+    }
+    @PatchMapping("/cancel-appointment/{appointmentId")
+    public ResponseEntity<?> cancelAppointment(@PathVariable String appointmentId){
+        try
+        {
+            AppointmentForm appointmentForm = appointmentService.cancelAppointment(appointmentId);
+            return new ResponseEntity<>(appointmentForm, HttpStatus.CONTINUE);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
