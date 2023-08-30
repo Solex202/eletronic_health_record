@@ -68,6 +68,7 @@ class AppointmentServiceImplementationTest {
     @Test
     void viewAppointment(){
         AppointmentForm appointmentForm = appointmentService.viewAppointment("64e36dbc1fc83f4d67a77473");
+        assertThat(appointmentForm.getAppointmentDate(), is("2023-09-20"));
     }
 
     @Test

@@ -63,7 +63,7 @@ public class AppointmentController {
         }
 
     }
-    @PatchMapping("/cancel-appointment/{appointmentId")
+    @PatchMapping("/cancel-appointment/{appointmentId}")
     public ResponseEntity<?> cancelAppointment(@PathVariable String appointmentId){
         try
         {
