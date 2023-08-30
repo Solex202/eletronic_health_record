@@ -67,7 +67,7 @@ public class DoctorServiceImplementation implements DoctorService{
         Map<String, Object> map = new HashMap<>();
         map.put("name", doctor.getFirstName() + " "+ doctor.getLastName());
         map.put("token", token);
-        builder.append(FreeMarkerTemplateUtils.processTemplateIntoString(configuration.getTemplate("patientservice.ftlh"), map)
+        builder.append(FreeMarkerTemplateUtils.processTemplateIntoString(configuration.getTemplate("doctorservice.ftlh"), map)
         );
 
         emailSender.send(doctor.getEmail(), builder.toString());
