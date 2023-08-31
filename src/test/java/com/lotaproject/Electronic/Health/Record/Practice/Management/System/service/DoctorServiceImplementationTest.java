@@ -41,6 +41,11 @@ class DoctorServiceImplementationTest {
         assertThat(doctors.size(), is(5));
     }
 
+    @Test
+    void deleteDoctor(){
+        String res = doctorService.deleteDoctorFromDatabase("64e2182c6eb62a3cba1c9fb3");
+    }
+
     @AfterEach
     void tearDown() {
     }

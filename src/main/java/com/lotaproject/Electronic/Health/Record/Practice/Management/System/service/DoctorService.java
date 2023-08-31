@@ -11,4 +11,6 @@ public interface DoctorService {
     ApiResponse<?> saveDoctor(Doctor doctor) throws IOException, TemplateException;
 
     List<Doctor> findAllDoctors();
+
+    String deleteDoctorFromDatabase(String s);
 }
