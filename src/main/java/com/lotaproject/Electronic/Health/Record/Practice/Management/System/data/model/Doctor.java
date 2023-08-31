@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -25,5 +26,6 @@ public class Doctor {
     private String uniqueId;
     private LocalDateTime registeredDate;
     private LocalDateTime modifiedDate;
+    private Set<Role> roles;
 //    private List<AppointmentForm> appointments;
 }

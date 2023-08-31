@@ -2,6 +2,7 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.serv
 
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Doctor;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Role;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.DoctorRepository;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.email.EmailSender;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ElectronicHealthException;
@@ -21,10 +22,7 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -53,11 +51,15 @@ public class DoctorServiceImplementation implements DoctorService{
         if(doctorRepository.existsByEmail(doctor.getEmail())) throw new ElectronicHealthException(EMAIL_ALREADY_EXCEPTION.getMessage());
         if(!passwordIsValid(doctor.getPassword())) throw new ElectronicHealthException(INVALID_PASSWORD.getMessage());
         String encodedPassword = encoder.encode(doctor.getPassword());
+
+        Set<Role> role = new HashSet<>();
+        role.add(Role.DOCTOR);
         String doctorIdentity = RandomString.make(7);
         doctor.setRegisteredDate(LocalDateTime.now());
         doctor.setModifiedDate(LocalDateTime.now());
         doctor.setPassword(encodedPassword);
         doctor.setUniqueId(doctorIdentity);
+        doctor.setRoles(role);
         Doctor newDoctor = doctorRepository.save(doctor);
 
         String token = UUID.randomUUID().toString();
