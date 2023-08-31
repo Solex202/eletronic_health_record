@@ -80,6 +80,13 @@ public class DoctorServiceImplementation implements DoctorService{
         return doctorRepository.findAll();
     }
 
+    @Override
+    public String deleteDoctorFromDatabase(String doctorId) {
+
+         doctorRepository.deleteById(doctorId);
+         return "successful";
+    }
+
     private boolean emailIsValid(String email) {
 
         String regex = "[a-zA-z][\\w-]{1,20}@\\w{2,20}\\.\\w{2,3}$";

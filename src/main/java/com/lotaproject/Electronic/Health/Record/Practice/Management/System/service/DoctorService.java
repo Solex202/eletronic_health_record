@@ -12,5 +12,5 @@ public interface DoctorService {
 
     List<Doctor> findAllDoctors();
 
-    String deleteDoctorFromDatabase(String s);
+    String deleteDoctorFromDatabase(String doctorId);
 }
