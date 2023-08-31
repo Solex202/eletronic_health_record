@@ -23,7 +23,7 @@ public class SecurityConfiguration {
     http
         .csrf(customizer->customizer.disable())
         .authorizeHttpRequests(c->c.requestMatchers("/health-record/registration", "/health-record/login").permitAll())
-//        .authorizeHttpRequests(c->c.requestMatchers("").hasAuthority("CUSTOMER"))
+        .authorizeHttpRequests(c->c.requestMatchers("/doctors/register").hasAuthority("DOCTOR"))
         .sessionManagement(c->c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authenticationProvider(authenticationProvider)
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
