@@ -24,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import java.io.IOException;
@@ -103,7 +104,7 @@ public class PatientServiceImplementation implements PatientService{
 
     private String sendMailAndConfirmationToken(RegisterPatientRequest request, StringBuilder builder, Patient savedPatient) throws IOException, TemplateException {
         String token = UUID.randomUUID().toString();
-        ConfirmationToken confirmationToken = new ConfirmationToken(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(15), savedPatient);
+        ConfirmationToken confirmationToken = new ConfirmationToken(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(15),null, savedPatient);
         confirmationTokenService.saveConfirmationToken(confirmationToken);
         Map<String, Object> map = new HashMap<>();
         map.put("name", request.getFirstName() + " "+ request.getLastName());
@@ -193,6 +194,7 @@ public class PatientServiceImplementation implements PatientService{
     }
 
 
+    @Transactional
     public String confirmToken(String token) {
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
@@ -209,7 +211,7 @@ public class PatientServiceImplementation implements PatientService{
             throw new IllegalStateException("token expired");
         }
 
-//        confirmationTokenService.setConfirmedAt(token);
+        confirmationTokenService.setConfirmedAt(token);
 //        appUserService.enableAppUser(
 //                confirmationToken.getAppUser().getEmail());
         return "confirmed";

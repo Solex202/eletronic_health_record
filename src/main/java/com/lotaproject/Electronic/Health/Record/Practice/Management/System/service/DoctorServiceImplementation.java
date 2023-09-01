@@ -63,7 +63,7 @@ public class DoctorServiceImplementation implements DoctorService{
         Doctor newDoctor = doctorRepository.save(doctor);
 
         String token = UUID.randomUUID().toString();
-        ConfirmationToken confirmationToken = new ConfirmationToken(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(15), newDoctor);
+        ConfirmationToken confirmationToken = new ConfirmationToken(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(15),null, newDoctor);
         confirmationTokenService.saveConfirmationToken(confirmationToken);
 
         var builder = new StringBuilder();

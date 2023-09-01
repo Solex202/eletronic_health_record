@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-
+//@RequiredArgsConstructor
+//@AllArgsConstructor
 @Data
 public class ConfirmationToken {
 
@@ -27,17 +28,19 @@ public class ConfirmationToken {
 
     @DBRef
     private Doctor doctor;
-    public ConfirmationToken(String token, LocalDateTime createdAt, LocalDateTime expiresAt, Patient patient) {
+    public ConfirmationToken(String token, LocalDateTime createdAt, LocalDateTime expiresAt, LocalDateTime confirmedAt, Patient patient) {
         this.token = token;
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;
+        this.confirmedAt=confirmedAt;
         this.patient = patient;
     }
 
-    public ConfirmationToken(String token, LocalDateTime createdAt, LocalDateTime expiresAt, Doctor doctor) {
+    public ConfirmationToken(String token, LocalDateTime createdAt, LocalDateTime expiresAt,LocalDateTime confirmedAt, Doctor doctor) {
         this.token = token;
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;
+        this.confirmedAt=confirmedAt;
         this.doctor = doctor;
     }
 
