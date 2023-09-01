@@ -11,8 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-//@RequiredArgsConstructor
-//@AllArgsConstructor
+
 @Data
 public class ConfirmationToken {
 
