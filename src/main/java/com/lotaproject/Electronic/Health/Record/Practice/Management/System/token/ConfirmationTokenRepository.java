@@ -9,6 +9,6 @@ public interface ConfirmationTokenRepository extends MongoRepository<Confirmatio
 
     Optional<ConfirmationToken> findByToken(String token);
 
-    int updateConfirmedAt(String token, LocalDateTime now);
+//    void updateConfirmedAt(String token, LocalDateTime now);
 
 }
