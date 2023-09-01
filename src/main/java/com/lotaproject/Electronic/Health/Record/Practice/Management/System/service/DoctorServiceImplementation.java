@@ -91,7 +91,6 @@ public class DoctorServiceImplementation implements DoctorService{
     }
 
     private boolean emailIsValid(String email) {
-
         String regex = "[a-zA-z][\\w-]{1,20}@\\w{2,20}\\.\\w{2,3}$";
         Pattern pattern  = Pattern.compile(regex);
         Matcher matcher =  pattern.matcher(email);
