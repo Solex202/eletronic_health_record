@@ -3,6 +3,7 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.cont
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ElectronicHealthException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.service.PatientService;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.service.PatientServiceImplementation;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.token.ConfirmToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,13 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class ConfirmationTokenController {
 
     @Autowired
-    private PatientServiceImplementation patientService;
+    private ConfirmToken confirmToken;
 
     @GetMapping("/confirm")
     public String confirm(@RequestParam("token") String token){
         try
         {
-            return patientService.confirmToken(token);
+            return confirmToken.confirmToken(token);
         } catch (ElectronicHealthException e) {
             return e.getMessage();
         }

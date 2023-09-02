@@ -194,28 +194,7 @@ public class PatientServiceImplementation implements PatientService{
         return matcher.matches();
     }
 
-    @Transactional
-    public String confirmToken(String token) {
-        ConfirmationToken confirmationToken = confirmationTokenService
-                .getToken(token)
-                .orElseThrow(() ->
-                        new ElectronicHealthException("token not found"));
 
-        if (confirmationToken.getConfirmedAt() != null) {
-            throw new ElectronicHealthException("email already confirmed");
-        }
-
-        LocalDateTime expiredAt = confirmationToken.getExpiresAt();
-
-        if (expiredAt.isBefore(LocalDateTime.now())) {
-            throw new ElectronicHealthException("token expired");
-        }
-
-        confirmationTokenService.setConfirmedAt(token);
-//        appUserService.enableAppUser(
-//                confirmationToken.getAppUser().getEmail());
-        return "confirmed";
-    }
 
 
 }
