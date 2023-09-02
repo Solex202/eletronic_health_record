@@ -8,6 +8,7 @@
 </head>
 <body>
     <div style="margin-top: 10px">Greetings, ${name}</div>
+    <div>Welcome to Lota Medical Center</div>
     <div>Your username is <b>${name}</b></div>
     <div>Please confirm your email <b>${token}</b></div>
     <br/>
