@@ -34,7 +34,7 @@ public class EmailService implements EmailSender{
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
             helper.setText(email, true);
             helper.setTo(to);
-            helper.setSubject("Welcome to Lota Medical Centre");
+            helper.setSubject("CONFIRM YOUR EMAIL");
             helper.setFrom("onwukalotachukwu210@gmail.com");
             javaMailSenderImpl.setPassword("oycbszmprimgfkeq");
             javaMailSenderImpl.setUsername("onwukalotachukwu210@gmail.com");

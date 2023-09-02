@@ -121,6 +121,7 @@ public class PatientServiceImplementation implements PatientService{
         if(!emailIsValid(request.getEmail())) builder.append(EMAIL_IS_INVALID.getMessage()).append("\n");
 
         if(patientRepository.existsByEmail(request.getEmail())) builder.append(EMAIL_ALREADY_EXCEPTION.getMessage()).append("\n");
+        //TODO: check if attributes are the same and if email not confirmed, send another email
         if(!passwordIsValid(request.getPassword())) builder.append(INVALID_PASSWORD.getMessage());
 
         if(!builder.isEmpty()) throw new ElectronicHealthException(builder.toString());
