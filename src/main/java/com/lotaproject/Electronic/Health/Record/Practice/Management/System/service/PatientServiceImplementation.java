@@ -73,25 +73,14 @@ public class PatientServiceImplementation implements PatientService{
 
         medicalHistoryService.createMedicalHistory(medicalHistory);
 
-        var patient = new Patient();
-        patient.setMedicalHistory(medicalHistory);
-        patient.setRoles(role);
-        patient.setPatientId(patientIdentity);
-        patient.setAddress(request.getAddress());
-        patient.setEmail(request.getEmail());
-        patient.setPassword(encodedPassword);
-        patient.setFirstName(request.getFirstName());
-        patient.setLastName(request.getLastName());
-        patient.setPhoneNumber(request.getPhoneNumber());
-        patient.setOccupation(request.getOccupation());
-        patient.setGender(Gender.valueOf(request.getGender()));
-        patient.setBloodGroup(BloodGroup.valueOf(request.getBloodGroup()));
-        patient.setGenotype(Genotype.valueOf(request.getGenotype()));
-        patient.setDob(LocalDate.parse(request.getDob()));
-        patient.setGuardian(request.getGuardian());
-        patient.setGuardianPhoneNumber(request.getGuardianPhoneNumber());
-        patient.setRegisteredDate(LocalDateTime.now());
-        patient.setModifiedDate(LocalDateTime.now());
+        var patient = Patient.builder().medicalHistory(medicalHistory).roles(role).patientId(patientIdentity)
+                .address(request.getAddress()).email(request.getEmail()).password(encodedPassword)
+                .firstName(request.getFirstName()).lastName(request.getLastName()).phoneNumber(request.getPhoneNumber())
+                .occupation(request.getOccupation()).gender(Gender.valueOf(request.getGender()))
+                .bloodGroup(BloodGroup.valueOf(request.getBloodGroup())).genotype(Genotype.valueOf(request.getGenotype()))
+                .dob(LocalDate.parse(request.getDob())).guardian(request.getGuardianPhoneNumber())
+                .registeredDate(LocalDateTime.now()).modifiedDate(LocalDateTime.now()).build();
+
         var savedPatient = patientRepository.save(patient);
         String token = sendMailAndConfirmationToken(request, builder, savedPatient);
 
