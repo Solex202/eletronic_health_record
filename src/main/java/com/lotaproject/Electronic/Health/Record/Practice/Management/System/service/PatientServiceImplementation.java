@@ -54,7 +54,6 @@ public class PatientServiceImplementation implements PatientService{
     private ConfirmationTokenService confirmationTokenService;
     @Override
     public ApiResponse<?> registerPatient(RegisterPatientRequest request) throws IOException, TemplateException {
-        var patient = new Patient();
 
         var builder = new StringBuilder();
 
@@ -66,16 +65,15 @@ public class PatientServiceImplementation implements PatientService{
 
         registerPatientValidation(request);
 
-        MedicalHistory medicalHistory = new MedicalHistory();
-        medicalHistory.setMedication(request.getMedicalHistory().getMedication());
-        medicalHistory.setAllergy(request.getMedicalHistory().getAllergy());
-        medicalHistory.setAttachment(request.getMedicalHistory().getAttachment());
-        medicalHistory.setAilment(request.getMedicalHistory().getAilment());
-        medicalHistory.setCreatedDate(LocalDateTime.now());
-        medicalHistory.setModifiedDate(LocalDateTime.now());
+        MedicalHistory medicalHistory = MedicalHistory.builder().medication(request.getMedicalHistory().getMedication())
+                .allergy(request.getMedicalHistory().getAllergy()).attachment(request.getMedicalHistory().getAttachment())
+                .ailment(request.getMedicalHistory().getAilment()).createdDate(LocalDateTime.now())
+                .modifiedDate(LocalDateTime.now()).build();
+
 
         medicalHistoryService.createMedicalHistory(medicalHistory);
 
+        var patient = new Patient();
         patient.setMedicalHistory(medicalHistory);
         patient.setRoles(role);
         patient.setPatientId(patientIdentity);
