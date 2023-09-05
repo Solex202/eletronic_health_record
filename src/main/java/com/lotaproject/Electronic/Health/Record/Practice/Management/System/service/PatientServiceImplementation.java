@@ -94,7 +94,6 @@ public class PatientServiceImplementation implements PatientService{
         patient.setGuardianPhoneNumber(request.getGuardianPhoneNumber());
         patient.setRegisteredDate(LocalDateTime.now());
         patient.setModifiedDate(LocalDateTime.now());
-
         var savedPatient = patientRepository.save(patient);
         String token = sendMailAndConfirmationToken(request, builder, savedPatient);
 
@@ -122,6 +121,10 @@ public class PatientServiceImplementation implements PatientService{
 
         if(patientRepository.existsByEmail(request.getEmail())) builder.append(EMAIL_ALREADY_EXCEPTION.getMessage()).append("\n");
         //TODO: check if attributes are the same and if email not confirmed, send another email
+        // how do i know that an email is not confirmed?
+
+        ValidationService sa = new ValidationService();
+
         if(!passwordIsValid(request.getPassword())) builder.append(INVALID_PASSWORD.getMessage());
 
         if(!builder.isEmpty()) throw new ElectronicHealthException(builder.toString());

@@ -50,6 +50,7 @@ public class DoctorServiceImplementation implements DoctorService{
         if(!emailIsValid(doctor.getEmail())) throw new ElectronicHealthException(EMAIL_IS_INVALID.getMessage());
         if(doctorRepository.existsByEmail(doctor.getEmail())) throw new ElectronicHealthException(EMAIL_ALREADY_EXCEPTION.getMessage());
         //TODO: check if attributes are the same and if email not confirmed, send another email
+        // how do i know that an email is not confirmed?
         if(!passwordIsValid(doctor.getPassword())) throw new ElectronicHealthException(INVALID_PASSWORD.getMessage());
         String encodedPassword = encoder.encode(doctor.getPassword());
 

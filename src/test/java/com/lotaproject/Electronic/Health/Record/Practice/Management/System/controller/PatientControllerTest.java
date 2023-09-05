@@ -73,21 +73,10 @@ class PatientControllerTest {
 
 
         RegisterPatientRequest request = RegisterPatientRequest.builder()
-                .gender("MALE")
-                .email("remi@gmail.com")
-                .password("#Rems2222")
-                .address("9 road")
-                .guardian("mr him")
-                .firstName("lota")
-                .lastName("chi")
-                .phoneNumber("080343332")
-                .genotype("AA")
-                .bloodGroup("O_POSITIVE")
-                .occupation("intro tech")
-                .dob(String.valueOf(LocalDate.of(2000,3,22)))
-                .guardianPhoneNumber("0909090")
-                .medicalHistory(medicalHistory)
-                .build();
+                .gender("MALE").email("remi@gmail.com").password("#Rems2222").address("9 road").guardian("mr him")
+                .firstName("lota").lastName("chi").phoneNumber("080343332").genotype("AA").bloodGroup("O_POSITIVE")
+                .occupation("intro tech").dob(String.valueOf(LocalDate.of(2000,3,22)))
+                .guardianPhoneNumber("0909090").medicalHistory(medicalHistory).build();
         Patient patient = new Patient();
 
         patient.setMedicalHistory(medicalHistory);

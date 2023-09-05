@@ -39,5 +39,9 @@ public class Patient {
     private String patientId;
     private  boolean loginStatus;
     private Set<Role> roles;
+    private boolean isEnabled;
+
+    //Todo:
+    // quantifiers, composition
 
 }
