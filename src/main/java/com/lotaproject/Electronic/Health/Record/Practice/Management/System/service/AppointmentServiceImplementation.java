@@ -62,15 +62,11 @@ public class AppointmentServiceImplementation implements AppointmentService{
     public ApiResponse<?> bookAppointment(String patientId, BookAppointmentFormDto form) throws IOException, TemplateException {
          var patient = getPatient(patientId);
 
-         var appointForm = new AppointmentForm();
-         appointForm.setAppointmentTime(form.getAppointmentTime().toString());
-         appointForm.setAppointmentDate(form.getAppointmentDate().toString());
-         appointForm.setPatientID(patient.getPatientId());
-         appointForm.setDoctorName(form.getDoctorName());
-         appointForm.setBookedTime(LocalDateTime.now());
-         appointForm.setPatientName(patient.getFirstName().concat(" ").concat(patient.getLastName()));
-         appointForm.setAppointmentStatus(AppointmentStatus.BOOKED);
-         appointForm.setDuration("30 MINS");
+         var appointForm = AppointmentForm.builder().appointmentDate(form.getAppointmentDate().toString())
+                 .appointmentTime(form.getAppointmentTime().toString()).patientID(patient.getPatientId())
+                 .doctorName(form.getDoctorName()).bookedTime(LocalDateTime.now()).patientName(patient.getFirstName().concat(" ").concat(patient.getLastName()))
+                 .appointmentStatus(AppointmentStatus.BOOKED).duration("30 MINS").build();
+
 
          AppointmentForm newForm = appointmentRepository.save(appointForm);
 
@@ -166,7 +162,6 @@ public class AppointmentServiceImplementation implements AppointmentService{
         if(appointmentForm.getAppointmentStatus() != AppointmentStatus.COMPLETED || appointmentForm.getAppointmentStatus() != AppointmentStatus.CANCELLED) {
             appointmentForm.setAppointmentStatus(AppointmentStatus.CANCELLED);
             appointmentForm.setModifiedDate(LocalDateTime.now());
-
         }
         appointmentRepository.save(appointmentForm);
 
