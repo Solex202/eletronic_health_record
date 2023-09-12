@@ -23,11 +23,11 @@ public class ApplicationConfig {
 
   private final UserDetailsService userDetailsService;
 
-//  @Bean
-//  public UserDetailsService userDetailsService() {
-//    return email -> (UserDetails) repository.findByEmail(email)
-//        .orElseThrow(() -> new PatientDoesNotexistException("User not found"));
-//  }
+  @Bean
+  public UserDetailsService userDetailsService() {
+    return email -> (UserDetails) repository.findByEmail(email)
+        .orElseThrow(() -> new PatientDoesNotexistException("User not found"));
+  }
 
   @Bean
   public AuthenticationProvider authenticationProvider() {

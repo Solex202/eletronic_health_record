@@ -23,5 +23,5 @@ public interface PatientService {
 
     PaginatedPatientResponse findByName(int pageNumber, int pageSize,String name);
 
-    List<Patient> findAllPatients();
+    PaginatedPatientResponse findAllPatients(int pageNumber, int pageSize);
 }

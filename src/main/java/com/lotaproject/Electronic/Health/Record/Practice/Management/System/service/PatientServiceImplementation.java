@@ -70,7 +70,6 @@ public class PatientServiceImplementation implements PatientService{
                 .ailment(request.getMedicalHistory().getAilment()).createdDate(LocalDateTime.now())
                 .modifiedDate(LocalDateTime.now()).build();
 
-
         medicalHistoryService.createMedicalHistory(medicalHistory);
 
         var patient = Patient.builder().medicalHistory(medicalHistory).roles(role).patientId(patientIdentity)
@@ -154,8 +153,18 @@ public class PatientServiceImplementation implements PatientService{
     }
 
     @Override
-    public List<Patient> findAllPatients() {
-        return patientRepository.findAll();
+    public PaginatedPatientResponse findAllPatients(int pageNumber, int pageSize) {
+        Sort.Order order = new Sort.Order(Sort.Direction.DESC, "registeredDate");
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, Sort.by(order));
+
+        Page<Patient> listOfPatient = patientRepository.findAll(pageable);
+        return PaginatedPatientResponse.builder()
+                .patients(listOfPatient.toList())
+                .noOfPatients(listOfPatient.getContent().size())
+                .currentPage(pageNumber)
+                .pageSize(pageSize)
+                .build();
+
     }
 
     private void updateEmailValidation(String email, Patient patient) {
