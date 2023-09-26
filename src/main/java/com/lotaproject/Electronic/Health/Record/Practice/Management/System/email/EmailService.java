@@ -36,7 +36,7 @@ public class EmailService implements EmailSender{
             helper.setTo(to);
             helper.setSubject("CONFIRM YOUR EMAIL");
             helper.setFrom("onwukalotachukwu210@gmail.com");
-            javaMailSenderImpl.setPassword("oycbszmprimgfkeq");
+            javaMailSenderImpl.setPassword("pewhargjlbnbttzr");
             javaMailSenderImpl.setUsername("onwukalotachukwu210@gmail.com");
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {

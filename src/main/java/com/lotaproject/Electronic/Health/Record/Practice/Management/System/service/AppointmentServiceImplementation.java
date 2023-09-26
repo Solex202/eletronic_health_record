@@ -60,9 +60,9 @@ public class AppointmentServiceImplementation implements AppointmentService{
 
     @Override
     public ApiResponse<?> bookAppointment(String patientId, BookAppointmentFormDto form) throws IOException, TemplateException {
-         var patient = getPatient(patientId);
+         Patient patient = getPatient(patientId);
 
-         var appointForm = AppointmentForm.builder().appointmentDate(form.getAppointmentDate().toString())
+         AppointmentForm appointForm = AppointmentForm.builder().appointmentDate(form.getAppointmentDate().toString())
                  .appointmentTime(form.getAppointmentTime().toString()).patientID(patient.getPatientId())
                  .doctorName(form.getDoctorName()).bookedTime(LocalDateTime.now()).patientName(patient.getFirstName().concat(" ").concat(patient.getLastName()))
                  .appointmentStatus(AppointmentStatus.BOOKED).duration("30 MINS").build();
