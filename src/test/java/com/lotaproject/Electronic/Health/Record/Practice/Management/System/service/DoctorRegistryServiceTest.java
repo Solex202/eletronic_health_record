@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 
 @SpringBootTest
-class DoctorRegistryServiceImplTest {
+class DoctorRegistryServiceTest {
 
     @Autowired
     private DoctorRegistryService doctorRegistryService;
