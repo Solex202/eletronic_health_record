@@ -26,6 +26,12 @@ public class DoctorRegistryServiceImpl implements DoctorRegistryService {
     private DoctorRegistryRepository doctorRegistryRepository;
     @Override
     public ApiResponse<?> createSchedule(DoctorRegistry doctorRegistry) {
+        if(doctorRegistry == null){
+            return ApiResponse.builder().message("Doctor registry cannot be null").build();
+        }
+        if(doctorRegistry.getScheduleRegistries() == null || doctorRegistry.getScheduleRegistries().isEmpty()){
+            return ApiResponse.builder().message("No schedule registries found").build();
+        }
 
         List<ScheduleRegistry> scheduleRegistries = doctorRegistry.getScheduleRegistries();
 
