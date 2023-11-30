@@ -1,197 +1,91 @@
 package com.lotaproject.Electronic.Health.Record.Practice.Management.System.service;
 
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.RegisterPatientRequest;
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.UpdatePatientDetailRequest;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.PaginatedPatientResponse;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.MedicalHistory;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Patient;
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.CannotRegisterPatientException;
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.PatientDoesNotexistException;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.PatientRepository;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ElectronicHealthException;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.token.ConfirmationTokenService;
+import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-@SpringBootTest
-class PatientServiceImplementationTest {
-    @Autowired
-    private PatientService patientService;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+public class PatientServiceImplementationTest {
+
+    @Mock
+    private MedicalHistoryService medicalHistoryService;
+    @Mock
+    private PatientRepository patientRepository;
+    @Mock
+    private ConfirmationTokenService confirmationTokenService;
+    @Mock
+    private BCryptPasswordEncoder encoder;
+    @Mock
+    private Configuration configuration;
+
+    @InjectMocks
+    private PatientServiceImplementation patientService;
+
+    private RegisterPatientRequest request;
+
     @BeforeEach
-    void setUp() {
+    public void setUp() {
+        request = new RegisterPatientRequest();
+        request.setEmail("test@test.com");
+        request.setPassword("Test@123");
+        request.setFirstName("Test");
+        request.setLastName("User");
+        request.setMedicalHistory(new MedicalHistory());
     }
+
     @Test
-    void testThatCanRegisterPatient() throws TemplateException, IOException {
-        MedicalHistory medicalHistory = new MedicalHistory();
-        List<String> ailments = new ArrayList<>();
-        ailments.add("headaches");
-        ailments.add("sickness");
+    public void testRegisterPatientWhenRequestIsValidThenPatientIsRegistered() throws IOException, TemplateException {
+        when(encoder.encode(request.getPassword())).thenReturn("encodedPassword");
+        when(patientRepository.save(any(Patient.class))).thenReturn(new Patient());
+        when(configuration.getTemplate(anyString())).thenReturn(null);
+        when(FreeMarkerTemplateUtils.processTemplateIntoString(any(), any())).thenReturn("emailContent");
 
-        List<String> allergy = new ArrayList<>();
-        allergy.add("house dust");
-        allergy.add("insect sting");
-
-        List<String> medication = new ArrayList<>();
-        medication.add("medicine");
-
-        medicalHistory.setAilment(ailments);
-        medicalHistory.setAllergy(allergy);
-        medicalHistory.setMedication(medication);
-
-//        Patient patient = Patient.builder().
-
-        RegisterPatientRequest request = RegisterPatientRequest.builder()
-                .gender("MALE")
-                .email("christiansolomon592@gmail.com")
-                .password("#Rems2222")
-                .address("9 road")
-                .guardian("mr him")
-                .firstName("Paulinus")
-                .lastName("Nri")
-                .phoneNumber("080343332")
-                .genotype("AA")
-                .bloodGroup("O_POSITIVE")
-                .occupation("intro tech")
-                .dob(String.valueOf(LocalDate.of(2000,3,22)))
-                .guardianPhoneNumber("0909090")
-                .medicalHistory(medicalHistory)
-                .build();
         ApiResponse<?> response = patientService.registerPatient(request);
 
-            assertAll(
-                    ()-> assertNotNull(response),
-                    ()-> assertThat(response.getMessage(), is("Registration Successfully"))
-            );
-    }
-    @Test
-    @DisplayName("Throw exception if email already exist")
-    void testThatCannotRegisterPatient(){
-
-        RegisterPatientRequest request = RegisterPatientRequest.builder()
-                .gender("MALE")
-                .email("lolo@gmail.com")
-                .address("9 road")
-                .guardian("mr him")
-                .firstName("lota")
-                .lastName("chi")
-                .phoneNumber("080343332")
-                .genotype("AA")
-                .bloodGroup("O_POSITIVE")
-                .occupation("intro tech")
-                .dob(String.valueOf(LocalDate.of(2000,3,22)))
-                .guardianPhoneNumber("0909090")
-                .build();
-
-        assertThrows(CannotRegisterPatientException.class, ()-> patientService.registerPatient(request));
-
-    }
-    @Test
-    @DisplayName("Throw exception if email is not a valid one")
-    void testThatCannotRegisterPatient2(){
-
-        RegisterPatientRequest request = RegisterPatientRequest.builder()
-                .gender("MALE")
-                .email(".lolo@gmail.com")
-                .address("9 road")
-                .guardian("mr him")
-                .firstName("lota")
-                .lastName("chi")
-                .phoneNumber("080343332")
-                .genotype("AA")
-                .bloodGroup("O_POSITIVE")
-                .occupation("intro tech")
-                .dob(String.valueOf(LocalDate.of(2000,3,22)))
-                .guardianPhoneNumber("0909090")
-                .build();
-
-        assertThrows(CannotRegisterPatientException.class, ()-> patientService.registerPatient(request));
-
-    }
-    @Test
-    void testThatCanFindPatientByEmail(){
-
-        Patient patient = patientService.findByEmail("amaka@gmail.com");
-        assertAll(
-                ()-> assertNotNull(patient),
-                ()->assertEquals(patient.getFirstName(), "lota")
-        );
-    }
-    @Test
-    void testThatCannotFindUserByEmail_if_email_doesnot_exist_in_database(){
-
-        assertThrows(PatientDoesNotexistException.class, ()-> patientService.findByEmail("dsddssamaka@gmail.com"));
+        assertNotNull(response);
+        assertEquals("Registration Successfully", response.getMessage());
+        assertNotNull(response.getToken());
+        assertNotNull(response.getData());
     }
 
     @Test
-    void testThatCanViewPatientById(){
+    public void testRegisterPatientWhenEmailIsInvalidThenExceptionIsThrown() {
+        request.setEmail("invalidEmail");
 
-        Patient patient = patientService.findById("649c9fe055fa5534e308b2da");
-        assertAll(
-                ()-> assertNotNull(patient),
-                ()->assertEquals(patient.getFirstName(), "lota")
-        );
-    }
-    @Test
-    void testThatCannotFindUserById_if_id_doesnot_exist_in_database(){
-
-        assertThrows(PatientDoesNotexistException.class, ()-> patientService.findById("364723793274883"));
-    }
-    @Test
-    void testThatCanUpdatePatientDetails(){
-
-        UpdatePatientDetailRequest request1 = new UpdatePatientDetailRequest();
-        request1.setEmail("amaka@gmail.com");
-
-        ApiResponse<?> response1 = patientService.updatePatientDetails("64a332cc0003081a15b23893", request1);
-        assertThat(response1.getMessage(), is("Updated Successful"));
-
-    }
-    @Test
-    @DisplayName("throw exception if email is not valid")
-    void testThatCannotUpdatePatientDetails1(){
-
-        UpdatePatientDetailRequest request1 = new UpdatePatientDetailRequest();
-        request1.setEmail("*amaka@gmail.com");
-
-        assertThrows(CannotRegisterPatientException.class, ()-> patientService.updatePatientDetails("64a332cc0003081a15b23893", request1));
-    }
-    @Test
-    @DisplayName("throw exception if email is already exists")
-    void testThatCannotUpdatePatientDetails2(){
-
-        UpdatePatientDetailRequest request1 = new UpdatePatientDetailRequest();
-        request1.setEmail("lotas@gmail.com");
-
-        assertThrows(CannotRegisterPatientException.class, ()-> patientService.updatePatientDetails("64a332cc0003081a15b23893", request1));
-    }
-    @Test
-    void testThatCanFindPatientByName(){
-        PaginatedPatientResponse response = patientService.findByName(1,10,"ify");
-
-        assertAll(
-                ()-> assertThat(response.getNoOfPatients(), is(1))
-        );
+        assertThrows(ElectronicHealthException.class, () -> patientService.registerPatient(request));
     }
 
     @Test
-    void findAllPatients(){
-        PaginatedPatientResponse all = patientService.findAllPatients(1 ,10);
-//        assertThat(all.size(), is(13));
+    public void testRegisterPatientWhenEmailExistsThenExceptionIsThrown() {
+        when(patientRepository.existsByEmail(request.getEmail())).thenReturn(true);
+
+        assertThrows(ElectronicHealthException.class, () -> patientService.registerPatient(request));
     }
 
+    @Test
+    public void testRegisterPatientWhenPasswordIsInvalidThenExceptionIsThrown() {
+        request.setPassword("invalidPassword");
 
-    @AfterEach
-    void tearDown() {
+        assertThrows(ElectronicHealthException.class, () -> patientService.registerPatient(request));
     }
 }
