@@ -1,80 +1,71 @@
 package com.lotaproject.Electronic.Health.Record.Practice.Management.System.service;
 
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.BreakPeriod;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.RegisteredScheduleResponse;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.DoctorRegistry;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.ScheduleRegistry;
-import org.junit.jupiter.api.AfterEach;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.DoctorRegistryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.DayOfWeek;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
+public class DoctorRegistryServiceImplTest {
 
-@SpringBootTest
-class DoctorRegistryServiceImplTest {
+    @Mock
+    private DoctorRegistryRepository doctorRegistryRepository;
 
-    @Autowired
-    private DoctorRegistryService doctorRegistryService;
+    @InjectMocks
+    private DoctorRegistryServiceImpl doctorRegistryService;
+
+    private DoctorRegistry doctorRegistry;
+    private List<ScheduleRegistry> scheduleRegistries;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
+        scheduleRegistries = new ArrayList<>();
+        scheduleRegistries.add(new ScheduleRegistry("1", LocalDateTime.now(), LocalDateTime.now().plusHours(2), new ArrayList<>()));
+
+        doctorRegistry = new DoctorRegistry();
+        doctorRegistry.setDoctorId("1");
+        doctorRegistry.setDoctorEmail("doctor1@gmail.com");
+        doctorRegistry.setScheduleRegistries(scheduleRegistries);
     }
 
     @Test
-    void testThatDoctorCanProvideAvailableTimeForWeeklySchedule(){
-        List<BreakPeriod> breakPeriodList = new ArrayList<>();
-        BreakPeriod breakPeriod1 = new BreakPeriod();
-        breakPeriod1.setFrom(LocalTime.of(9, 0));
-        breakPeriod1.setTo(LocalTime.of(11, 0));
-
-        breakPeriodList.add(breakPeriod1);
-
-        BreakPeriod breakPeriod2 = new BreakPeriod();
-        breakPeriod2.setFrom(LocalTime.of(13, 0));
-        breakPeriod2.setTo(LocalTime.of(14, 0));
-
-        breakPeriodList.add(breakPeriod2);
-
-        List<ScheduleRegistry> scheduleRegistryList = new ArrayList<>();
-        ScheduleRegistry scheduleRegistry1 = new ScheduleRegistry();
-        scheduleRegistry1.setFrom(LocalDateTime.of(2023,9,23,9,0));
-        scheduleRegistry1.setTo(LocalDateTime.of(2023, 9,23,17,0));
-        scheduleRegistry1.setBreakPeriod(breakPeriodList);
-
-        scheduleRegistryList.add(scheduleRegistry1);
-
-        ScheduleRegistry scheduleRegistry2 = new ScheduleRegistry();
-        scheduleRegistry2.setFrom(LocalDateTime.of(2023,9,24,11,0));
-        scheduleRegistry2.setTo(LocalDateTime.of(2023, 9,24,14,20));
-        scheduleRegistry2.setBreakPeriod(breakPeriodList);
-
-        scheduleRegistryList.add(scheduleRegistry2);
-
-        DoctorRegistry doctorRegistry = new DoctorRegistry();
-        doctorRegistry.setDoctorId("hWd3N2E");
-        doctorRegistry.setDoctorEmail("ademiju@gmail.com");
-        doctorRegistry.setScheduleRegistries(scheduleRegistryList);
+    public void testCreateScheduleWhenValidDoctorRegistryThenScheduleCreated() {
+        when(doctorRegistryRepository.save(any(DoctorRegistry.class))).thenReturn(doctorRegistry);
 
         ApiResponse<?> response = doctorRegistryService.createSchedule(doctorRegistry);
 
-        assertAll(
-                ()-> assertThat(response.getMessage(),is("Schedule created successfully"))
-        );
-
+        assertThat(response.getMessage()).isEqualTo("Schedule created successfully");
+        assertThat(response.getData()).isInstanceOf(RegisteredScheduleResponse.class);
+        verify(doctorRegistryRepository, times(1)).save(any(DoctorRegistry.class));
     }
 
-    @AfterEach
-    void tearDown() {
+    @Test
+    public void testCreateScheduleWhenNullDoctorRegistryThenError() {
+        ApiResponse<?> response = doctorRegistryService.createSchedule(null);
+
+        assertThat(response.getMessage()).isEqualTo("Doctor registry cannot be null");
+    }
+
+    @Test
+    public void testCreateScheduleWhenNoScheduleRegistriesThenError() {
+        doctorRegistry.setScheduleRegistries(new ArrayList<>());
+
+        ApiResponse<?> response = doctorRegistryService.createSchedule(doctorRegistry);
+
+        assertThat(response.getMessage()).isEqualTo("No schedule registries found");
     }
 }
