@@ -22,7 +22,7 @@ public class AppointmentController {
     private AppointmentService appointmentService;
 
     @PostMapping("/book/{patientId}")
-    public ResponseEntity<?> bookAppointment(@PathVariable String patientId,  @RequestBody BookAppointmentFormDto bookAppointmentFormDto) {
+    private ResponseEntity<?> bookAppointment(@PathVariable String patientId,  @RequestBody BookAppointmentFormDto bookAppointmentFormDto) {
         try {
             ApiResponse<?> response = appointmentService.bookAppointment(patientId, bookAppointmentFormDto);
             return new ResponseEntity<>(response, HttpStatus.CREATED);

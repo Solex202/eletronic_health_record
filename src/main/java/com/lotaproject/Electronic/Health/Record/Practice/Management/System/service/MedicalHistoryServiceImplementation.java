@@ -1,6 +1,6 @@
 package com.lotaproject.Electronic.Health.Record.Practice.Management.System.service;
 
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.MedicalHistory;
+import  com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.MedicalHistory;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.MedicalHistoryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

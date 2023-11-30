@@ -26,64 +26,32 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class PatientServiceImplementationTest {
+class PatientServiceTest {
     @Autowired
     private PatientService patientService;
 
     @BeforeEach
     void setUp() {
     }
-
-    @Test
-    @DisplayName("Test patient registration with valid request")
-    void testRegisterPatientWhenValidRequestThenPatientRegistered() throws TemplateException, IOException {
-        // Test implementation here
-    }
-
-    @Test
-    @DisplayName("Test patient registration with already registered email")
-    void testRegisterPatientWhenEmailAlreadyRegisteredThenExceptionThrown() {
-        // Test implementation here
-    }
-
-    @Test
-    @DisplayName("Test patient registration with invalid email")
-    void testRegisterPatientWhenInvalidEmailThenExceptionThrown() {
-        // Test implementation here
-    }
-
-    @Test
-    @DisplayName("Test patient registration with invalid password")
-    void testRegisterPatientWhenInvalidPasswordThenExceptionThrown() {
-        // Test implementation here
-    }
-
-    // Existing tests here
     @AfterEach
     void tearDown() {
     }
 
     @Test
     void testThatCanRegisterPatient() throws TemplateException, IOException {
-        MedicalHistory medicalHistory = new MedicalHistory();
-        List<String> ailments = new ArrayList<>();
-        ailments.add("headaches");
-        ailments.add("sickness");
+        MedicalHistory medicalHistory = getMedicalHistory();
 
-        List<String> allergy = new ArrayList<>();
-        allergy.add("house dust");
-        allergy.add("insect sting");
+        RegisterPatientRequest request = getRegisterPatientRequest(medicalHistory);
+        ApiResponse<?> response = patientService.registerPatient(request);
 
-        List<String> medication = new ArrayList<>();
-        medication.add("medicine");
+        assertAll(
+                () -> assertNotNull(response),
+                () -> assertThat(response.getMessage(), is("Registration Successfully"))
+        );
+    }
 
-        medicalHistory.setAilment(ailments);
-        medicalHistory.setAllergy(allergy);
-        medicalHistory.setMedication(medication);
-
-//        Patient patient = Patient.builder().
-
-        RegisterPatientRequest request = RegisterPatientRequest.builder()
+    private static RegisterPatientRequest getRegisterPatientRequest(MedicalHistory medicalHistory) {
+        return RegisterPatientRequest.builder()
                 .gender("MALE")
                 .email("deolaoladeji@gmail.com")
                 .password("#Rems2222")
@@ -99,12 +67,25 @@ class PatientServiceImplementationTest {
                 .guardianPhoneNumber("0909090")
                 .medicalHistory(medicalHistory)
                 .build();
-        ApiResponse<?> response = patientService.registerPatient(request);
+    }
 
-        assertAll(
-                () -> assertNotNull(response),
-                () -> assertThat(response.getMessage(), is("Registration Successfully"))
-        );
+    private static MedicalHistory getMedicalHistory() {
+        MedicalHistory medicalHistory = new MedicalHistory();
+        List<String> ailments = new ArrayList<>();
+        ailments.add("headaches");
+        ailments.add("sickness");
+
+        List<String> allergy = new ArrayList<>();
+        allergy.add("house dust");
+        allergy.add("insect sting");
+
+        List<String> medication = new ArrayList<>();
+        medication.add("medicine");
+
+        medicalHistory.setAilment(ailments);
+        medicalHistory.setAllergy(allergy);
+        medicalHistory.setMedication(medication);
+        return medicalHistory;
     }
 
     @Test
