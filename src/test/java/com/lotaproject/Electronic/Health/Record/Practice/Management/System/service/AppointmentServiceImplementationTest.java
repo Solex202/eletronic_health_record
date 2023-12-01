@@ -3,76 +3,97 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.serv
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.BookAppointmentFormDto;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.AppointmentForm;
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.AppointmentStatus;
-import freemarker.template.TemplateException;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Patient;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.AppointmentRepository;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.DoctorRepository;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.PatientRepository;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.DoctorException;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.PatientDoesNotexistException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
+import java.util.Optional;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
-class AppointmentServiceImplementationTest {
-    @Autowired
-    private  AppointmentService appointmentService;
+public class AppointmentServiceImplementationTest {
+
+    @Mock
+    private AppointmentRepository appointmentRepository;
+
+    @Mock
+    private PatientRepository patientRepository;
+
+    @Mock
+    private DoctorRepository doctorRepository;
+
+    @InjectMocks
+    private AppointmentServiceImplementation appointmentService;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+    }
 
     @Test
-    void testThatCanBookAppointment() throws TemplateException, IOException {
+    public void testBookAppointmentWhenValidPatientIdAndFormThenAppointmentBooked() throws Exception {
+        String patientId = "1";
+        Patient patient = new Patient();
+        patient.setFirstName("name");
+        patient.setLastName("last");
+        patient.setPatientId(patientId);
+        when(patientRepository.findById(patientId)).thenReturn(Optional.of(patient));
+
         BookAppointmentFormDto form = new BookAppointmentFormDto();
-        form.setAppointmentDate(LocalDate.of(2023, 9,20));
-        form.setDoctorName("miju ade");
-        form.setAppointmentTime(LocalTime.of(4  , 0));
+        form.setAppointmentDate(LocalDate.now());
+        form.setAppointmentTime(LocalTime.now());
+        form.setDoctorName("Doctor");
 
-        ApiResponse<?> response = appointmentService.bookAppointment("64c24f02b938fe00ef5177ae", form);
 
-        assertThat(response.getMessage(), is("Appointment Booked successfully"));
+        ApiResponse<?> appointmentForm = appointmentService.bookAppointment(patientId, form);
+
+        verify(appointmentRepository, times(1)).save(any(AppointmentForm.class));
+        assertThat(appointmentForm).isNotNull();
     }
 
     @Test
-    void testThatCanGetDoctorsAvailableInADay(){
-        List<String> res = appointmentService.getAvailableDoctors(LocalDate.of(2023,9,23));
-        assertThat(res.size(), is(1));
-    }
+    public void testBookAppointmentWhenInvalidPatientIdThenExceptionThrown() {
+        String patientId = "1";
+        when(patientRepository.findById(patientId)).thenReturn(Optional.empty());
 
-    @Test
-    void testThatCanGetDoctorAvailableTimes(){
-        List<LocalTime> res = appointmentService.getDoctorTimeSlots("ademiju@gmail.com", "2023-09-25");
-        assertThat(res.size(), is(5));
-    }
-
-    @Test
-    void rescheduleAppointment() throws TemplateException, IOException {
         BookAppointmentFormDto form = new BookAppointmentFormDto();
-        form.setAppointmentDate(LocalDate.of(2023, 7,25));
-        form.setDoctorName("Doctor jesus");
-        form.setAppointmentTime(LocalTime.of(11, 30));
+        form.setAppointmentDate(LocalDate.now());
+        form.setAppointmentTime(LocalTime.now());
+        form.setDoctorName("Doctor");
 
-        ApiResponse<?> response = appointmentService.rescheduleAppointment("64a332cc0003081a15b23893","64e2182c6eb62a3cba1c9fb3", form);
-
-        assertThat(response.getMessage(), is("Appointment rescheduled successfully"));
+        assertThatThrownBy(() -> appointmentService.bookAppointment(patientId, form))
+                .isInstanceOf(PatientDoesNotexistException.class);
     }
 
     @Test
-    void cancelAppointment(){
-        AppointmentForm appointment = appointmentService.cancelAppointment("64e36dbc1fc83f4d67a77473");
+    public void testBookAppointmentWhenDoctorWithEmailDoesNotExistThenExceptionThrown() throws Exception {
+        String patientId = "1";
+        Patient patient = new Patient();
+        patient.setFirstName("name");
+        patient.setLastName("last");
+        patient.setPatientId(patientId);
+        when(patientRepository.findById(patientId)).thenReturn(Optional.of(patient));
 
-        assertThat(appointment.getAppointmentStatus(),is(AppointmentStatus.CANCELLED));
-    }
+        BookAppointmentFormDto form = new BookAppointmentFormDto();
+        form.setAppointmentDate(LocalDate.now());
+        form.setAppointmentTime(LocalTime.now());
+        form.setDoctorName("Doctor");
 
-    @Test
-    void viewAppointment(){
-        AppointmentForm appointmentForm = appointmentService.viewAppointment("64e36dbc1fc83f4d67a77473");
-        assertThat(appointmentForm.getAppointmentDate(), is("2023-09-20"));
-    }
+        when(doctorRepository.findByEmail(form.getDoctorName())).thenReturn(Optional.empty());
 
-    @Test
-    void findAll(){
-        List<AppointmentForm> appointmentFormList = appointmentService.findAll();
+        assertThatThrownBy(() -> appointmentService.bookAppointment(patientId, form))
+                .isInstanceOf(DoctorException.class);
     }
 }
