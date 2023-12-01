@@ -44,7 +44,7 @@ public class AuthServiceImplementation implements AuthService {
     JwtService jwtService;
 
     public Patient findByEmail(String email) {
-        return patientRepository.findByEmail(email).orElseThrow(()-> new PatientDoesNotexistException(String.format(PATIENT_WITH_EMAIL_DOESNOT_EXIST.getMessage(), email)));
+        return patientRepository.findByEmail(email).orElseThrow(()-> new PatientDoesNotexistException(String.format(PATIENT_WITH_EMAIL_DOES_NOT_EXIST.getMessage(), email)));
     }
 
     @Override

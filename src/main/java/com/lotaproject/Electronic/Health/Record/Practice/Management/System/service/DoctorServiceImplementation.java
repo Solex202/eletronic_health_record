@@ -5,6 +5,7 @@ import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Role;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.DoctorRepository;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.email.EmailSender;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.DoctorException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ElectronicHealthException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.token.ConfirmationToken;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.token.ConfirmationTokenService;
@@ -19,7 +20,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
-import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -90,6 +90,16 @@ public class DoctorServiceImplementation implements DoctorService{
 
          doctorRepository.deleteById(doctorId);
          return "successful";
+    }
+
+    @Override
+    public Doctor findDoctorByEmail(String email) {
+        return doctorRepository.findByEmail(email).orElseThrow(()-> new DoctorException(String.format(DOCTOR_WITH_EMAIL_DOES_NOT_EXIST.getMessage(), email)));
+    }
+
+    @Override
+    public Doctor findDoctorById(String id) {
+        return doctorRepository.findById(id).orElseThrow(()-> new DoctorException(String.format(DOCTOR_WITH_ID_DOES_NOT_EXIST.getMessage(), id)));
     }
 
     private boolean emailIsValid(String email) {

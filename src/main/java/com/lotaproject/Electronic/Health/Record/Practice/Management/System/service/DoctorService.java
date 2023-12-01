@@ -6,6 +6,7 @@ import freemarker.template.TemplateException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public interface DoctorService {
     ApiResponse<?> saveDoctor(Doctor doctor) throws IOException, TemplateException;
@@ -13,4 +14,8 @@ public interface DoctorService {
     List<Doctor> findAllDoctors();
 
     String deleteDoctorFromDatabase(String doctorId);
+
+    Doctor findDoctorByEmail(String email);
+
+    Doctor findDoctorById(String id);
 }

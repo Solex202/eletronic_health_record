@@ -10,7 +10,6 @@ import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.email.EmailSender;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.AppointmentException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.DoctorException;
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.PatientDoesNotexistException;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
@@ -25,8 +24,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
-import static com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ExceptionMessages.DOCTOR_WITH_EMAIL_DOESNOT_EXIST;
-import static com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ExceptionMessages.PATIENT_WITH_ID_DOESNOT_EXIST;
+import static com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.ExceptionMessages.DOCTOR_WITH_EMAIL_DOES_NOT_EXIST;
 
 @Service
 @AllArgsConstructor
@@ -52,7 +50,7 @@ public class AppointmentServiceImplementation implements AppointmentService{
 
 
     public Doctor getDoctor(String email){
-        return doctorRepository.findByEmail(email).orElseThrow(()-> new DoctorException(String.format(DOCTOR_WITH_EMAIL_DOESNOT_EXIST.getMessage(), email)));
+        return doctorRepository.findByEmail(email).orElseThrow(()-> new DoctorException(String.format(DOCTOR_WITH_EMAIL_DOES_NOT_EXIST.getMessage(), email)));
     }
 
     public AppointmentForm getAppointment(String id){
