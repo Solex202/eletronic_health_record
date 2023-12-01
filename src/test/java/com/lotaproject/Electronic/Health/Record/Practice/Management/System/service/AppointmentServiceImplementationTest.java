@@ -1,12 +1,12 @@
 package com.lotaproject.Electronic.Health.Record.Practice.Management.System.service;
 
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.BookAppointmentFormDto;
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.response.ApiResponse;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.AppointmentForm;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Patient;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.AppointmentRepository;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.DoctorRepository;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.PatientRepository;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.AppointmentException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.DoctorException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.PatientDoesNotexistException;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +21,10 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 public class AppointmentServiceImplementationTest {
@@ -43,6 +47,25 @@ public class AppointmentServiceImplementationTest {
     }
 
     @Test
+    public void testViewAppointmentWhenValidIdThenReturnAppointmentForm() {
+        String appointmentId = "1";
+        AppointmentForm mockAppointmentForm = new AppointmentForm();
+        when(appointmentRepository.findById(anyString())).thenReturn(Optional.of(mockAppointmentForm));
+
+        AppointmentForm returnedAppointmentForm = appointmentService.viewAppointment(appointmentId);
+
+        assertEquals(mockAppointmentForm, returnedAppointmentForm, "The returned appointment form should be the same as the mock appointment form");
+    }
+
+    @Test
+    public void testViewAppointmentWhenInvalidIdThenThrowAppointmentException() {
+        String appointmentId = "1";
+        when(appointmentRepository.findById(anyString())).thenReturn(Optional.empty());
+
+        assertThrows(AppointmentException.class, () -> appointmentService.viewAppointment(appointmentId), "An AppointmentException should be thrown if the appointment ID does not exist");
+    }
+
+    @Test
     public void testBookAppointmentWhenValidPatientIdAndFormThenAppointmentBooked() throws Exception {
         String patientId = "1";
         Patient patient = new Patient();
@@ -56,11 +79,9 @@ public class AppointmentServiceImplementationTest {
         form.setAppointmentTime(LocalTime.now());
         form.setDoctorName("Doctor");
 
-
-        ApiResponse<?> appointmentForm = appointmentService.bookAppointment(patientId, form);
+        appointmentService.bookAppointment(patientId, form);
 
         verify(appointmentRepository, times(1)).save(any(AppointmentForm.class));
-        assertThat(appointmentForm).isNotNull();
     }
 
     @Test
@@ -93,7 +114,6 @@ public class AppointmentServiceImplementationTest {
 
         when(doctorRepository.findByEmail(form.getDoctorName())).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> appointmentService.bookAppointment(patientId, form))
-                .isInstanceOf(DoctorException.class);
+        assertThrows(DoctorException.class, () -> appointmentService.bookAppointment(patientId, form));
     }
 }

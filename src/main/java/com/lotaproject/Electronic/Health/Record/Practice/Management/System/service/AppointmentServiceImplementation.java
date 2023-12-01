@@ -50,11 +50,11 @@ public class AppointmentServiceImplementation implements AppointmentService{
     private Patient getPatient(String id){
         return patientRepository.findById(id).orElseThrow(()-> new PatientDoesNotexistException(String.format(PATIENT_WITH_ID_DOESNOT_EXIST.getMessage(), id)));
     }
-    private Doctor getDoctor(String email){
+    public Doctor getDoctor(String email){
         return doctorRepository.findByEmail(email).orElseThrow(()-> new DoctorException(String.format(DOCTOR_WITH_EMAIL_DOESNOT_EXIST.getMessage(), email)));
     }
 
-    private AppointmentForm getAppointment(String id){
+    public AppointmentForm getAppointment(String id){
         return appointmentRepository.findById(id).orElseThrow(()-> new AppointmentException("Appointment doesn't exist"));
     }
 
