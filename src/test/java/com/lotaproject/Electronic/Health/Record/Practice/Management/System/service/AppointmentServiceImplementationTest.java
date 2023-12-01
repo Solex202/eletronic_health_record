@@ -2,6 +2,7 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.serv
 
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.BookAppointmentFormDto;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.AppointmentForm;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Doctor;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Patient;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.AppointmentRepository;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.DoctorRepository;
@@ -55,6 +56,15 @@ public class AppointmentServiceImplementationTest {
         AppointmentForm returnedAppointmentForm = appointmentService.viewAppointment(appointmentId);
 
         assertEquals(mockAppointmentForm, returnedAppointmentForm, "The returned appointment form should be the same as the mock appointment form");
+    }
+
+    public void testGetDoctorById(){
+        String doctorId = "123";
+        Doctor mockedDoctor = new Doctor();
+        when(doctorRepository.findById(anyString())).thenReturn(Optional.of(mockedDoctor));
+
+        //act
+        Doctor returnedDoctor = appointmentService.getDoctor(doctorId);
     }
 
     @Test

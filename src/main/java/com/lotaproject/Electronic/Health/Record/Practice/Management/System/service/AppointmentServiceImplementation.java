@@ -45,11 +45,12 @@ public class AppointmentServiceImplementation implements AppointmentService{
     private EmailSender emailSender;
 
     @Autowired
+    private PatientService patientService;
+
+    @Autowired
     Configuration configuration;
 
-    private Patient getPatient(String id){
-        return patientRepository.findById(id).orElseThrow(()-> new PatientDoesNotexistException(String.format(PATIENT_WITH_ID_DOESNOT_EXIST.getMessage(), id)));
-    }
+
     public Doctor getDoctor(String email){
         return doctorRepository.findByEmail(email).orElseThrow(()-> new DoctorException(String.format(DOCTOR_WITH_EMAIL_DOESNOT_EXIST.getMessage(), email)));
     }
@@ -60,7 +61,7 @@ public class AppointmentServiceImplementation implements AppointmentService{
 
     @Override
     public ApiResponse<?> bookAppointment(String patientId, BookAppointmentFormDto form) throws IOException, TemplateException {
-         Patient patient = getPatient(patientId);
+         Patient patient = patientService.findById(patientId);
 
          AppointmentForm appointForm = AppointmentForm.builder().appointmentDate(form.getAppointmentDate().toString())
                  .appointmentTime(form.getAppointmentTime().toString()).patientID(patient.getPatientId())
@@ -134,7 +135,7 @@ public class AppointmentServiceImplementation implements AppointmentService{
     public ApiResponse<?> rescheduleAppointment(String patientId, String appointmentId, BookAppointmentFormDto form) throws TemplateException, IOException {
 
         AppointmentForm appointmentForm = getAppointment(appointmentId);
-        Patient patient =getPatient(patientId);
+        Patient patient =patientService.findById(patientId);
         if(appointmentForm.getAppointmentStatus().equals(AppointmentStatus.COMPLETED)){
             throw new AppointmentException("Appointment already completed, cannot be rescheduled");
         }
