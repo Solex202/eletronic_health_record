@@ -18,7 +18,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @SpringBootTest
-class AppointmentServiceImplementationTest {
+class AppointmentServiceTest {
     @Autowired
     private  AppointmentService appointmentService;
 
