@@ -3,8 +3,10 @@ package com.lotaproject.Electronic.Health.Record.Practice.Management.System.serv
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.BookAppointmentFormDto;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.AppointmentForm;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Doctor;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.DoctorRegistry;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Patient;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.AppointmentRepository;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.DoctorRegistryRepository;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.DoctorRepository;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.PatientRepository;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.AppointmentException;
@@ -18,6 +20,8 @@ import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,6 +43,9 @@ public class AppointmentServiceImplementationTest {
     @Mock
     private DoctorRepository doctorRepository;
 
+    @Mock
+    private DoctorRegistryRepository doctorRegistryRepository;
+
     @InjectMocks
     private AppointmentServiceImplementation appointmentService;
 
@@ -58,7 +65,8 @@ public class AppointmentServiceImplementationTest {
         assertEquals(mockAppointmentForm, returnedAppointmentForm, "The returned appointment form should be the same as the mock appointment form");
     }
 
-    public void testGetDoctorById(){
+    @Test
+    public void testGetDoctorById() {
         String doctorId = "123";
         Doctor mockedDoctor = new Doctor();
         when(doctorRepository.findById(anyString())).thenReturn(Optional.of(mockedDoctor));
@@ -125,5 +133,43 @@ public class AppointmentServiceImplementationTest {
         when(doctorRepository.findByEmail(form.getDoctorName())).thenReturn(Optional.empty());
 
         assertThrows(DoctorException.class, () -> appointmentService.bookAppointment(patientId, form));
+    }
+
+    @Test
+    public void testGetAvailableDoctorsWhenValidDateThenReturnDoctorList() {
+        LocalDate date = LocalDate.now();
+        List<DoctorRegistry> doctorRegistries = new ArrayList<>();
+        DoctorRegistry doctorRegistry = new DoctorRegistry();
+        doctorRegistry.setDoctorEmail("doctor@example.com");
+        doctorRegistries.add(doctorRegistry);
+        when(doctorRegistryRepository.findAll()).thenReturn(doctorRegistries);
+
+        List<String> returnedDoctorList = appointmentService.getAvailableDoctors(date);
+
+        assertThat(returnedDoctorList).isNotEmpty();
+    }
+
+    @Test
+    public void testGetAvailableDoctorsWhenInvalidDateThenReturnEmptyList() {
+        LocalDate date = LocalDate.now().plusDays(1);
+        List<DoctorRegistry> doctorRegistries = new ArrayList<>();
+        DoctorRegistry doctorRegistry = new DoctorRegistry();
+        doctorRegistry.setDoctorEmail("doctor@example.com");
+        doctorRegistries.add(doctorRegistry);
+        when(doctorRegistryRepository.findAll()).thenReturn(doctorRegistries);
+
+        List<String> returnedDoctorList = appointmentService.getAvailableDoctors(date);
+
+        assertThat(returnedDoctorList).isEmpty();
+    }
+
+    @Test
+    public void testGetAvailableDoctorsWhenNoDoctorRegistriesThenReturnEmptyList() {
+        LocalDate date = LocalDate.now();
+        when(doctorRegistryRepository.findAll()).thenReturn(new ArrayList<>());
+
+        List<String> returnedDoctorList = appointmentService.getAvailableDoctors(date);
+
+        assertThat(returnedDoctorList).isEmpty();
     }
 }
