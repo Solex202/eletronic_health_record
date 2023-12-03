@@ -141,6 +141,7 @@ public class AppointmentServiceImplementationTest {
         List<DoctorRegistry> doctorRegistries = new ArrayList<>();
         DoctorRegistry doctorRegistry = new DoctorRegistry();
         doctorRegistry.setDoctorEmail("doctor@example.com");
+        doctorRegistry.setScheduleRegistries(new ArrayList<>());
         doctorRegistries.add(doctorRegistry);
         when(doctorRegistryRepository.findAll()).thenReturn(doctorRegistries);
 
@@ -155,6 +156,7 @@ public class AppointmentServiceImplementationTest {
         List<DoctorRegistry> doctorRegistries = new ArrayList<>();
         DoctorRegistry doctorRegistry = new DoctorRegistry();
         doctorRegistry.setDoctorEmail("doctor@example.com");
+        doctorRegistry.setScheduleRegistries(new ArrayList<>());
         doctorRegistries.add(doctorRegistry);
         when(doctorRegistryRepository.findAll()).thenReturn(doctorRegistries);
 
