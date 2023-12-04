@@ -36,6 +36,15 @@ public class DoctorRegistryServiceImpl implements DoctorRegistryService {
         List<ScheduleRegistry> scheduleRegistries = doctorRegistry.getScheduleRegistries();
 
         DoctorRegistry registry = new DoctorRegistry();
+        scheduleRegistries.stream().map(scheduleRegistry -> {
+            scheduleRegistry.setFrom(scheduleRegistry.getFrom().withSecond(0).withNano(0));
+            scheduleRegistry.setTo(scheduleRegistry.getTo().withSecond(0).withNano(0));
+            return scheduleRegistry;
+        }).forEach(scheduleRegistry -> {
+            if(scheduleRegistry.getFrom().isAfter(scheduleRegistry.getTo())){
+                throw new IllegalArgumentException("From date cannot be after to date");
+            }
+        });
 
         for (ScheduleRegistry scheduleRegistry : scheduleRegistries) {
             List<LocalTime> intervals = new ArrayList<>();
