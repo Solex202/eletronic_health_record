@@ -62,11 +62,7 @@ public class DoctorRegistryServiceImpl implements DoctorRegistryService {
             else registry.setThirtyMinutesInterval(m);
 
         }
-        registry.setDoctorId(doctorRegistry.getDoctorId());
-        registry.setDoctorEmail(doctorRegistry.getDoctorEmail());
-        registry.setCreatedDate(LocalDateTime.now());
-        registry.setModifiedDate(LocalDateTime.now());
-        registry.setScheduleRegistries(scheduleRegistries);
+        setRegistry(doctorRegistry, registry, scheduleRegistries);
 
         doctorRegistryRepository.save(registry);
 
@@ -79,6 +75,14 @@ public class DoctorRegistryServiceImpl implements DoctorRegistryService {
         return ApiResponse.builder().data(response).message("Schedule created successfully").build();
 
         //TODO, question, what makes a schedule unique?
+    }
+
+    private static void setRegistry(DoctorRegistry doctorRegistry, DoctorRegistry registry, List<ScheduleRegistry> scheduleRegistries) {
+        registry.setDoctorId(doctorRegistry.getDoctorId());
+        registry.setDoctorEmail(doctorRegistry.getDoctorEmail());
+        registry.setCreatedDate(LocalDateTime.now());
+        registry.setModifiedDate(LocalDateTime.now());
+        registry.setScheduleRegistries(scheduleRegistries);
     }
 
     private boolean isWithinBreakPeriods(LocalDateTime from, List<BreakPeriod> breakPeriods) {

@@ -20,10 +20,9 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
-//@AllArgsConstructor
+
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-//  @Autowired
   private final JwtService jwtService;
   private final UserDetailsService userDetailsService;
 

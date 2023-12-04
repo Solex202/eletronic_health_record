@@ -1,10 +1,7 @@
 package com.lotaproject.Electronic.Health.Record.Practice.Management.System.service;
 
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.dtos.request.BookAppointmentFormDto;
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.AppointmentForm;
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Doctor;
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.DoctorRegistry;
-import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.Patient;
+import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.model.*;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.AppointmentRepository;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.DoctorRegistryRepository;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.repository.DoctorRepository;
@@ -12,6 +9,7 @@ import com.lotaproject.Electronic.Health.Record.Practice.Management.System.data.
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.AppointmentException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.DoctorException;
 import com.lotaproject.Electronic.Health.Record.Practice.Management.System.exceptions.PatientDoesNotexistException;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +31,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
+@Slf4j
 public class AppointmentServiceImplementationTest {
 
     @Mock
@@ -49,9 +49,39 @@ public class AppointmentServiceImplementationTest {
     @InjectMocks
     private AppointmentServiceImplementation appointmentService;
 
+    private final List<ScheduleRegistry> scheduleRegistryList = new ArrayList<>();
+
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+
+        List<BreakPeriod> breakPeriodList = new ArrayList<>();
+        BreakPeriod breakPeriod1 = new BreakPeriod();
+        breakPeriod1.setFrom(LocalTime.of(9, 0));
+        breakPeriod1.setTo(LocalTime.of(11, 0));
+
+        breakPeriodList.add(breakPeriod1);
+
+        BreakPeriod breakPeriod2 = new BreakPeriod();
+        breakPeriod2.setFrom(LocalTime.of(13, 0));
+        breakPeriod2.setTo(LocalTime.of(14, 0));
+
+        breakPeriodList.add(breakPeriod2);
+
+        ScheduleRegistry scheduleRegistry1 = new ScheduleRegistry();
+        scheduleRegistry1.setFrom(LocalDateTime.of(2023,9,23,9,0));
+        scheduleRegistry1.setTo(LocalDateTime.of(2023, 9,23,17,0));
+        scheduleRegistry1.setBreakPeriod(breakPeriodList);
+
+        scheduleRegistryList.add(scheduleRegistry1);
+
+        ScheduleRegistry scheduleRegistry2 = new ScheduleRegistry();
+        scheduleRegistry2.setFrom(LocalDateTime.of(2023,9,24,11,0));
+        scheduleRegistry2.setTo(LocalDateTime.of(2023, 9,24,14,20));
+        scheduleRegistry2.setBreakPeriod(breakPeriodList);
+
+        scheduleRegistryList.add(scheduleRegistry2);
     }
 
     @Test
@@ -141,11 +171,13 @@ public class AppointmentServiceImplementationTest {
         List<DoctorRegistry> doctorRegistries = new ArrayList<>();
         DoctorRegistry doctorRegistry = new DoctorRegistry();
         doctorRegistry.setDoctorEmail("doctor@example.com");
-        doctorRegistry.setScheduleRegistries(new ArrayList<>());
+        doctorRegistry.setScheduleRegistries(scheduleRegistryList);
         doctorRegistries.add(doctorRegistry);
         when(doctorRegistryRepository.findAll()).thenReturn(doctorRegistries);
 
         List<String> returnedDoctorList = appointmentService.getAvailableDoctors(date);
+        log.info("returnedDoctorList: {}", returnedDoctorList);
+        log.info("schedule registry list: {}", scheduleRegistryList);
 
         assertThat(returnedDoctorList).isNotEmpty();
     }
